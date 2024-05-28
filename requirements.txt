@@ -1,4 +1,4 @@
 openai
 streamlit
-stremalit-chat
+streamlit-chat
 streamlit-navigation-bar
