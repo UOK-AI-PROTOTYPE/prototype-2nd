@@ -2,17 +2,21 @@ import streamlit as st
 from openai import OpenAI
 from streamlit_chat import message
 from streamlit_navigation_bar import st_navbar
+import toml
+
+setting = toml.load('setting.toml')
+setting_pr = toml.load('setting_prompt.toml')
 
 st.set_page_config(
     initial_sidebar_state="collapsed",
     page_title="UOK AI PROJECT",
-    page_icon=st.secrets["page_icon"],
+    page_icon=setting["page_icon"],
     layout="wide",
 )
 
 pages = ["ChatBot", "UOK"]
-urls = {"UOK": st.secrets["urls"]}
-logos = "https://www.uokdc.com/pages/basic/img/main/icon_ca2.png"
+urls = {"UOK": setting["urls"]}
+logos = setting["page_icon"]
 styles = {
     "nav": {
         "background-color": "rgb(42, 62, 170)",
@@ -50,7 +54,7 @@ st.write(page)
 
 with st.sidebar:
     st.image(logos, width=70)
-    st.write(st.secrets["sidebar_script"])
+    st.write(setting_pr["sidebar_script"])
 st.title("UOK 성향 추론 챗봇")
 st.write("챗봇과의 대화를 통해 사용자의 성향을 파악할 수 있습니다. 지금 바로 대화를 나눠보세요!")
 
@@ -58,11 +62,11 @@ st.write("챗봇과의 대화를 통해 사용자의 성향을 파악할 수 있
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 if "openai_model" not in st.session_state:
-    st.session_state["openai_model"] = st.secrets["openai_model"]
+    st.session_state["openai_model"] = setting["openai_model"]
 
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "system", "content": st.secrets["setting_prompt"]}
+        {"role": "system", "content": setting_pr["setting_prompt"]}
     ]
 
 for message in st.session_state.messages[1:]:
@@ -72,7 +76,7 @@ for message in st.session_state.messages[1:]:
 
 
 with st.chat_message("assistant"):
-    st.markdown(st.secrets["first_prompt"])
+    st.markdown(setting_pr["first_prompt"])
 
 if prompt := st.chat_input("답변을 작성해주세요 !"):
     st.session_state.messages.append({"role": "user", "content": prompt})
