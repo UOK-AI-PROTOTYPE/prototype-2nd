@@ -1,0 +1,25 @@
+{
+    "nav": {
+        "background-color": "rgb(42, 62, 170)",
+        "text-align": "left"
+    },
+    "div": {
+        "text-align": "left",
+        "max-width": "10rem"
+    },
+    "img": {
+        "padding-right": "10px"
+    },
+    "span": {
+        "border-radius": "0.5rem",
+        "color": "rgb(255, 255, 255)",
+        "margin": "0 0.125rem",
+        "padding": "0.4375rem 0.625rem"
+    },
+    "active": {
+        "background-color": "rgba(255, 255, 255, 0.25)"
+    },
+    "hover": {
+        "background-color": "rgba(255, 255, 255, 0.35)"
+    }
+}

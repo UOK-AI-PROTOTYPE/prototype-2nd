@@ -2,10 +2,11 @@ import streamlit as st
 from openai import OpenAI
 from streamlit_chat import message
 from streamlit_navigation_bar import st_navbar
-import toml
+import toml, json
 
 setting = toml.load('setting.toml')
 setting_pr = toml.load('setting_prompt.toml')
+json_file_path = 'styles.json'
 
 st.set_page_config(
     initial_sidebar_state="collapsed",
@@ -17,31 +18,8 @@ st.set_page_config(
 pages = ["ChatBot", "UOK"]
 urls = {"UOK": setting["urls"]}
 logos = setting["page_icon"]
-styles = {
-    "nav": {
-        "background-color": "rgb(42, 62, 170)",
-        "text-align": "left",
-    },
-    "div": {
-        "text-align": "left",
-        "max-width": "10rem",
-    },
-    "img": {
-        "padding-right": "10px",
-    },
-    "span": {
-        "border-radius": "0.5rem",
-        "color": "rgb(255, 255, 255)",
-        "margin": "0 0.125rem",
-        "padding": "0.4375rem 0.625rem",
-    },
-    "active": {
-        "background-color": "rgba(255, 255, 255, 0.25)",
-    },
-    "hover": {
-        "background-color": "rgba(255, 255, 255, 0.35)",
-    },
-}
+with open(json_file_path, 'r') as file:
+    styles = json.load(file)
 
 page = st_navbar(
     pages,
