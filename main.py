@@ -5,8 +5,8 @@ from streamlit_navigation_bar import st_navbar
 import toml, json
 
 setting = toml.load('setting.toml')
-setting_pr = toml.load('setting_prompt.toml')
-json_file_path = 'styles.json'
+prompts = toml.load('prompts.toml')
+json_styles = 'styles.json'
 
 st.set_page_config(
     initial_sidebar_state="collapsed",
@@ -18,7 +18,7 @@ st.set_page_config(
 pages = ["ChatBot", "UOK"]
 urls = {"UOK": setting["urls"]}
 logos = setting["page_icon"]
-with open(json_file_path, 'r') as file:
+with open(json_styles, 'r') as file:
     styles = json.load(file)
 
 page = st_navbar(
@@ -32,7 +32,7 @@ st.write(page)
 
 with st.sidebar:
     st.image(logos, width=70)
-    st.write(setting_pr["sidebar_script"])
+    st.write(prompts["sidebar_script"])
 st.title("UOK 성향 추론 챗봇")
 st.write("챗봇과의 대화를 통해 사용자의 성향을 파악할 수 있습니다. 지금 바로 대화를 나눠보세요!")
 
@@ -44,17 +44,16 @@ if "openai_model" not in st.session_state:
 
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "system", "content": setting_pr["setting_prompt"]}
+        {"role": "system", "content": prompts["setting_prompt"]}
     ]
+
+with st.chat_message("assistant"):
+    st.markdown(prompts["first_prompt"])
 
 for message in st.session_state.messages[1:]:
     if message["role"] != "system":
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
-
-
-with st.chat_message("assistant"):
-    st.markdown(setting_pr["first_prompt"])
 
 if prompt := st.chat_input("답변을 작성해주세요 !"):
     st.session_state.messages.append({"role": "user", "content": prompt})
