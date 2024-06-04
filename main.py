@@ -2,6 +2,7 @@ import streamlit as st
 from openai import OpenAI
 from streamlit_chat import message
 from streamlit_navigation_bar import st_navbar
+from utils.background import set_background
 import toml, json
 
 setting = toml.load('setting.toml')
@@ -29,6 +30,7 @@ page = st_navbar(
 )
 st.write(page)
 
+set_background()
 
 with st.sidebar:
     st.image(logos, width=70)
