@@ -2,7 +2,7 @@ import streamlit as st
 from openai import OpenAI
 from streamlit_chat import message
 from streamlit_navigation_bar import st_navbar
-from utils.background import set_background
+from utils.chat_background import chat_background
 from intro import set_intro
 import toml, json
 
@@ -32,6 +32,42 @@ with st.sidebar:
     st.write(prompts["sidebar_script"])
 st.title("UOK 성향 추론 챗봇")
 st.write("챗봇과의 대화를 통해 사용자의 성향을 파악할 수 있습니다. 지금 바로 대화를 나눠보세요!")
+
+# chat_background()
+
+#_____________________________________________________
+
+st.markdown(
+    """
+    <style>
+    .user-message {
+        background-color: #ACB9FE, 28%;
+        color: #0f5132;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    .assistant-message {
+        background-color: #2A3EAA, 16%;
+        color: #842029;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+
+
+
+
+
+
+
+
 
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])

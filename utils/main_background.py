@@ -1,7 +1,7 @@
 import streamlit as st
 
-def set_background():
-    background = '''
+def main_background():
+    main_background = '''
     <style>
     .stApp {
     background-size: cover;
@@ -9,4 +9,4 @@ def set_background():
     }
     </style>
     '''
-    st.markdown(background, unsafe_allow_html=True)
+    st.markdown(main_background, unsafe_allow_html=True)
