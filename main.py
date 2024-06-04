@@ -11,7 +11,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
     page_title="UOK AI PROJECT",
     page_icon=setting["page_icon"],
-    layout="wide",
+    layout="centered",
 )
 
 
