@@ -3,8 +3,12 @@ from openai import OpenAI
 from streamlit_chat import message
 from streamlit_navigation_bar import st_navbar
 from utils.chat_background import chat_background
+from utils.navbar import set_navbar
 from intro import set_intro
 import toml, json
+
+setting = toml.load('setting.toml')
+prompts = toml.load('prompts.toml')
 
 st.set_page_config(
     initial_sidebar_state="collapsed",
@@ -13,25 +17,7 @@ st.set_page_config(
     layout="centered",
 )
 
-setting = toml.load('setting.toml')
-prompts = toml.load('prompts.toml')
-json_styles = 'styles.json'
-
-
-pages = ["ChatBot", "UOK"]
-urls = {"UOK": setting["urls"]}
-logos = setting["page_icon"]
-with open(json_styles, 'r') as file:
-    styles = json.load(file)
-
-page = st_navbar(
-    pages,
-    urls=urls,
-    styles=styles,
-    options={"show_menu": True, "use_padding": True,}
-)
-st.write(page)
-
+# set_navbar()
 
 # with st.sidebar:
 #     st.image(logos, width=70)
@@ -39,41 +25,7 @@ st.write(page)
 st.title("UOK 성향 추론 챗봇")
 st.write("챗봇과의 대화를 통해 사용자의 성향을 파악할 수 있습니다. 지금 바로 대화를 나눠보세요!")
 
-# chat_background()
-
-#_____________________________________________________
-
-st.markdown(
-    """
-    <style>
-    .user-message {
-        background-color: #ACB9FE, 28%;
-        color: #0f5132;
-        padding: 10px;
-        border-radius: 5px;
-        margin-bottom: 10px;
-    }
-    .assistant-message {
-        background-color: #2A3EAA, 16%;
-        color: #842029;
-        padding: 10px;
-        border-radius: 5px;
-        margin-bottom: 10px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-
-
-
-
-
-
-
-
-
+chat_background()
 
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])

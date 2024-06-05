@@ -1,7 +1,8 @@
 import streamlit as st
-from openai import OpenAI
+import openai
 from streamlit_navigation_bar import st_navbar
 from utils.chat_background import chat_background
+from utils.navbar import set_navbar
 import toml, json
 
 st.set_page_config(
@@ -10,6 +11,8 @@ st.set_page_config(
     page_icon="🤖",
     layout="centered",
 )
+
+set_navbar()
 
 setting = toml.load('setting.toml')
 prompts = toml.load('prompts.toml')
@@ -20,18 +23,6 @@ urls = {"UOK": setting["urls"]}
 logos = setting["page_icon"]
 with open(json_styles, 'r') as file:
     styles = json.load(file)
-
-# page = st_navbar(
-#     pages,
-#     urls=urls,
-#     styles=styles,
-#     options={"show_menu": True, "use_padding": True,}
-# )
-# st.write(page)
-
-with st.sidebar:
-    st.image(logos, width=70)
-    st.write("Some sidebar content")
 
 # 사용자 정의 CSS 적용
 st.markdown(
@@ -49,9 +40,10 @@ st.markdown(
     }
 
     .user-message {
-        background-color: rgba(42, 62, 170, 0.5);
+        background-color: rgba(62, 83, 193);
         align-self: flex-end;
         margin-left: auto; /* 오른쪽 정렬 */
+        color: white;
     }
 
     .user-message::after {
@@ -63,7 +55,7 @@ st.markdown(
         width: 0;
         height: 0;
         border: 10px solid transparent;
-        border-left-color: rgba(42, 62, 170, 0.5);
+        border-left-color: rgba(62, 83, 193);
         border-right: 0;
         border-bottom: 0;
         pointer-events: none;
@@ -120,39 +112,36 @@ chat_background()
 st.title("UOK 성향 추론 챗봇")
 st.write("챗봇과의 대화를 통해 사용자의 성향을 파악할 수 있습니다. 지금 바로 대화를 나눠보세요!")
 
-client = OpenAI(api_key="YOUR_OPENAI_API_KEY")
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-3.5-turbo"
 
 if "messages" not in st.session_state:
-    st.session_state.messages = [
+    st.session_state["messages"] = [
         {"role": "system", "content": "Welcome to the UOK chatbot. How can I help you today?"}
     ]
 
-for message in st.session_state.messages[1:]:
+st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+for message in st.session_state["messages"][1:]:
     if message["role"] == "user":
         st.markdown(f'<div class="user-message"><div class="message-content">{message["content"]}</div></div>', unsafe_allow_html=True)
     elif message["role"] == "assistant":
         st.markdown(f'<div class="assistant-message"><div class="message-content">{message["content"]}</div></div>', unsafe_allow_html=True)
 
-st.markdown(
-    """
-    <div class="assistant-message">
-        <div class="message-content">Hello! How can I assist you today?</div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
 if prompt := st.chat_input("답변을 작성해주세요 !"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    st.session_state["messages"].append({"role": "user", "content": prompt})
     st.markdown(f'<div class="user-message"><div class="message-content">{prompt}</div></div>', unsafe_allow_html=True)
 
-    # 실제 OpenAI API 호출을 대신하여 응답 생성 (여기서는 예시 응답)
-    response = "This is a placeholder response."  # Replace with your actual API call
-    st.markdown(f'<div class="assistant-message"><div class="message-content">{response}</div></div>', unsafe_allow_html=True)
-    st.session_state.messages.append({"role": "assistant", "content": response})
+    response = openai.Completion.create(
+        model=st.session_state["openai_model"],
+        prompt=st.session_state["messages"],
+        max_tokens=1000,
+        temperature=1,
+        presence_penalty=1.5,
+    ).choices[0].text.strip()
 
-st.markdown('</div>', unsafe_allow_html=True)  # chatbox
-st.markdown('</div>', unsafe_allow_html=True)  # main-container
+    st.markdown(f'<div class="assistant-message"><div class="message-content">{response}</div></div>', unsafe_allow_html=True)
+    st.session_state["messages"].append({"role": "assistant", "content": response})
+
+st.markdown('</div>', unsafe_allow_html=True)  # chat-container
