@@ -4,8 +4,8 @@ def chat_background():
     chat_background = '''
     <style>
     .stApp {
-    background-size: cover;
-    background: linear-gradient(to bottom, #BEDFFF 0%, #BEDFFF 75%, #ffffff 75%, #ffffff 100%);
+    background: linear-gradient(to bottom, #BEDFFF 0%, #BEDFFF 10%,  #ffffff 35%, #ffffff 0%);
+    background-size: contain;    
     </style>
     '''
     st.markdown(chat_background, unsafe_allow_html=True)

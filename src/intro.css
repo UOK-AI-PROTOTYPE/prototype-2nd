@@ -31,6 +31,7 @@ body {
   font-family: "Freesentation-9Black"; /* 폰트 이름 수정 */
   margin-top: 200px; /* 네브바 높이를 고려한 마진 조정 */
   animation: logoFadeIn 2s ease-in-out;
+  text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); /* 그림자 설정 */
 }
 @keyframes logoFadeIn {
   from {
