@@ -1,9 +1,8 @@
 import streamlit as st
 from utils.main_background import main_background
-from utils.modal import trigger1
 from intro import set_intro
+from utils.modal import enter_modal
 from description import set_description
-import streamlit.components.v1 as components
 import toml, json
 
 setting = toml.load('setting.toml')
@@ -21,5 +20,5 @@ main_background()
 set_intro()
 set_description()
 
-if st.button("지금 바로 분석하기"):
-    trigger1()
+if st.button("분석 하러가기"):
+    enter_modal()
