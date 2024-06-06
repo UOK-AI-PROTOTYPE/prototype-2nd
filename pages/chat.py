@@ -59,34 +59,69 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-
-
-
-
-
-
-
-
-
-
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = setting["openai_model"]
+
+# --------
+
+
+# if "temp" not in st.session_state:
+#     st.session_state.temp = [
+#         {"role": "system", "content": prompts["setting_prompt"]}
+#     ]
+#     st.session_state.temp.append({"role": "user", "content": f"{target_name}, {num_participant}"})
+# st.write(2)
+
+# with st.chat_message("assistant"):
+#     stream = client.chat.completions.create(
+#         model=st.session_state["openai_model"],
+#         max_tokens=1000, # 생성할 최대 토큰 수
+#         temperature = 1,  # 다양성 조절을 위한 온도 매개변수
+#         presence_penalty= 1.5, # 값이 클수록 새로운 주제에 대해 이야기
+#         messages=[
+#             {"role": m["role"], "content": m["content"]}
+#             for m in st.session_state.temp
+#         ],
+#         stream=True,       
+#     )
+#     first_question = st.write_stream(stream)
+
 
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "system", "content": prompts["setting_prompt"]}
     ]
 
-with st.chat_message("assistant"):
-    st.markdown(prompts["first_prompt"])
+if 'target_name' in st.session_state and 'num_participant' in st.session_state:
+    target_name = st.session_state['target_name']
+    num_participant = st.session_state['num_participant']
+    st.session_state.messages.append(
+        {"role": "system", "content": f"Target name: {target_name}, Number of participants: {num_participant}"}
+    )
 
-for message in st.session_state.messages[1:]:
+with st.chat_message("assistant"):
+    stream = client.chat.completions.create(
+        model=st.session_state["openai_model"],
+        max_tokens=1000, # 생성할 최대 토큰 수
+        temperature = 1,  # 다양성 조절을 위한 온도 매개변수
+        presence_penalty= 1.5, # 값이 클수록 새로운 주제에 대해 이야기
+        messages=[ 
+            {"role": m["role"], "content": m["content"]}
+            for m in st.session_state.messages
+        ],
+        stream=True,
+    )
+    response = st.write_stream(stream)
+    st.session_state.messages.append({"role": "assistant", "content": response})
+    st.markdown(response)
+
+for message in st.session_state.messages[3:]:
     if message["role"] != "system":
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
+            st.write(1)
 
 if prompt := st.chat_input("답변을 작성해주세요 !"):
     st.session_state.messages.append({"role": "user", "content": prompt})
