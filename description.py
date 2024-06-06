@@ -27,9 +27,9 @@ def set_description():
     </body>
     </html>
     """
-    components.html(html_code, height=350)
+    components.html(html_code, height=750)
 
-    st.image("src/image/description.png")
+    st.image("src/image/description.png", width=700)
 
     html_code = f"""
     <!DOCTYPE html>

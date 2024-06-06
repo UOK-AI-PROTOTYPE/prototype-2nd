@@ -17,14 +17,9 @@ st.set_page_config(
     layout="centered",
 )
 
-
 main_background()
 set_intro()
 set_description()
 
-
-# st.markdown("src/image/main_image.png", unsafe_allow_html=True)
-
 if st.button("지금 바로 분석하기"):
     trigger1()
-    # enter_modal()
