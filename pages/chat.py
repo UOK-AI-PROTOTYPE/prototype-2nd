@@ -59,29 +59,27 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-
-
-
-
-
-
-
-
-
-
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = setting["openai_model"]
 
+# --------
+if 'target_name' in st.session_state and 'num_participant' in st.session_state:
+    target_name = st.session_state['target_name']
+    num_participant = st.session_state['num_participant']
+
+first_question = f"""안녕하세요, {target_name}님.
+총 {num_participant}분이 MBTI분석에 참여하시는군요.:)  
+첫번째 질문드리겠습니다.  
+본인과 가장 셩격이나 행동이 비슷한 영화 캐릭터는 무엇인가요? 그 이유도 함께 알려주세요."""
+
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "system", "content": prompts["setting_prompt"]}
     ]
+    st.session_state.messages.append({"role": "assistant", "content": first_question})
 
-with st.chat_message("assistant"):
-    st.markdown(prompts["first_prompt"])
 
 for message in st.session_state.messages[1:]:
     if message["role"] != "system":
