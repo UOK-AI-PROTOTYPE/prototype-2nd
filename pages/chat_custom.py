@@ -133,15 +133,20 @@ if prompt := st.chat_input("답변을 작성해주세요 !"):
     st.session_state["messages"].append({"role": "user", "content": prompt})
     st.markdown(f'<div class="user-message"><div class="message-content">{prompt}</div></div>', unsafe_allow_html=True)
 
-    response = openai.Completion.create(
+    response = openai.ChatCompletion.create(
         model=st.session_state["openai_model"],
-        prompt=st.session_state["messages"],
         max_tokens=1000,
         temperature=1,
         presence_penalty=1.5,
-    ).choices[0].text.strip()
+        messages=[
+            {"role": m["role"], "content": m["content"]}
+            for m in st.session_state["messages"]
+        ],
+    )
+    
+    result_text = response['choices'][0]['message']['content'].strip()
 
-    st.markdown(f'<div class="assistant-message"><div class="message-content">{response}</div></div>', unsafe_allow_html=True)
-    st.session_state["messages"].append({"role": "assistant", "content": response})
+    st.markdown(f'<div class="assistant-message"><div class="message-content">{result_text}</div></div>', unsafe_allow_html=True)
+    st.session_state["messages"].append({"role": "assistant", "content": result_text})
 
 st.markdown('</div>', unsafe_allow_html=True)  # chat-container

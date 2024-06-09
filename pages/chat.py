@@ -1,5 +1,5 @@
 import streamlit as st
-from openai import OpenAI
+import openai
 from streamlit_chat import message
 from utils import modal
 from intro import set_intro
@@ -24,7 +24,8 @@ st.set_page_config(
 st.title("UOK 성향 추론 챗봇")
 st.write("챗봇과의 대화를 통해 사용자의 성향을 파악할 수 있습니다. 지금 바로 대화를 나눠보세요!")
 
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+# client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = setting["openai_model"]
@@ -62,7 +63,8 @@ if prompt := st.chat_input("답변을 작성해주세요 !"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        stream = client.chat.completions.create(
+        stream = openai.ChatCompletion.create(
+            openai.api_key,
             model=st.session_state["openai_model"],
             max_tokens=1000, # 생성할 최대 토큰 수
             temperature = 1,  # 다양성 조절을 위한 온도 매개변수
