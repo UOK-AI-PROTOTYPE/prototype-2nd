@@ -3,7 +3,7 @@ from utils.main_background import main_background
 from intro import set_intro
 from utils.modal import enter_modal
 from description import set_description
-import toml, json
+import toml
 
 setting = toml.load('setting.toml')
 prompts = toml.load('prompts.toml')

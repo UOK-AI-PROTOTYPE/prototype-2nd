@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as components
 
 # 챗봇 입장시
 @st.experimental_dialog("분석 대상자의 정보를 알려주세요 !")

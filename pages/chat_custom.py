@@ -1,6 +1,5 @@
 import streamlit as st
 import openai
-from streamlit_navigation_bar import st_navbar
 from utils.chat_background import chat_background
 from utils.navbar import set_navbar
 import toml, json

@@ -27,7 +27,7 @@ def set_description():
     </body>
     </html>
     """
-    components.html(html_code, height=750)
+    components.html(html_code, height=700)
 
     st.image("src/image/description.png", width=700)
 
@@ -42,10 +42,11 @@ def set_description():
         </style>
     </head>
     <body>
-        <dev class="title2">다양한 관점에서 나를 바라보고, </br> 더 나은 자신을 발견해보세요.</div>
+        <div class="title1">다양한 관점에서 나를 바라보고, </br> 더 나은 자신을 발견해보세요.</div>
+        <div class="subtitle"> 분석할 대상자의 이름과 대화에 참여할 인원 수를 작성한 뒤, </br>사용자 본인이 가장 먼저 대화에 참여하고 이후에 지인들이 차례로 대화에 참여합니다.</div>
     </body>
     </html>
     """
-    components.html(html_code, height=200)
+    components.html(html_code, height=400)
 
     

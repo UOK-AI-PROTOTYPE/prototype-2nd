@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_navigation_bar import st_navbar
-import toml, json
+import json
 
 def set_navbar():
 

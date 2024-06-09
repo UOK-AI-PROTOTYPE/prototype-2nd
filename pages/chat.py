@@ -1,9 +1,9 @@
 import streamlit as st
 import openai
 from streamlit_chat import message
+from utils.chat_background import chat_background
 from utils import modal
-from intro import set_intro
-import toml, json
+import toml
 
 setting = toml.load('setting.toml')
 prompts = toml.load('prompts.toml')
@@ -15,16 +15,11 @@ st.set_page_config(
     layout="centered",
 )
 
-# set_navbar()
-# chat_background()
-# with st.sidebar:
-#     st.image(logos, width=70)
-#     st.write(prompts["sidebar_script"])
 
 st.title("UOK 성향 추론 챗봇")
 st.write("챗봇과의 대화를 통해 사용자의 성향을 파악할 수 있습니다. 지금 바로 대화를 나눠보세요!")
+chat_background()
 
-# client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 if "openai_model" not in st.session_state:
