@@ -1,4 +1,4 @@
-openai==0.28
+openai==1.33.0
 streamlit
 streamlit-chat
 streamlit-navigation-bar

@@ -1,5 +1,5 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 from utils.chat_background import chat_background
 from utils.navbar import set_navbar
 import toml, json
@@ -111,7 +111,7 @@ chat_background()
 st.title("UOK 성향 추론 챗봇")
 st.write("챗봇과의 대화를 통해 사용자의 성향을 파악할 수 있습니다. 지금 바로 대화를 나눠보세요!")
 
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-3.5-turbo"
@@ -132,18 +132,16 @@ if prompt := st.chat_input("답변을 작성해주세요 !"):
     st.session_state["messages"].append({"role": "user", "content": prompt})
     st.markdown(f'<div class="user-message"><div class="message-content">{prompt}</div></div>', unsafe_allow_html=True)
 
-    response = openai.ChatCompletion.create(
-        model=st.session_state["openai_model"],
-        max_tokens=1000,
-        temperature=1,
-        presence_penalty=1.5,
-        messages=[
-            {"role": m["role"], "content": m["content"]}
-            for m in st.session_state["messages"]
-        ],
-    )
-    
-    result_text = response['choices'][0]['message']['content'].strip()
+    response = client.chat.completions.create(model=st.session_state["openai_model"],
+    max_tokens=1000,
+    temperature=1,
+    presence_penalty=1.5,
+    messages=[
+        {"role": m["role"], "content": m["content"]}
+        for m in st.session_state["messages"]
+    ])
+
+    result_text = response.choices[0].message.content.strip()
 
     st.markdown(f'<div class="assistant-message"><div class="message-content">{result_text}</div></div>', unsafe_allow_html=True)
     st.session_state["messages"].append({"role": "assistant", "content": result_text})
