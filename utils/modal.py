@@ -4,9 +4,10 @@ import streamlit as st
 @st.experimental_dialog("분석 대상자의 정보를 알려주세요 !")
 def enter_modal():
     with st.form("input_form"):
+        st.write("엔터키를 누르지 말아주세요.") # 엔터키 입력으로 인한 문제 방지를 위해 문구 추가
         target_name = st.text_input("분석대상의 이름을 입력해주세요")
         num_participant = st.number_input("총 참여자 수를 입력해주세요", min_value=1, value=None)
-        submit_button = st.form_submit_button(label='제출')
+        submit_button = st.form_submit_button(label='제출', type="primary")
     
     if submit_button:
         if target_name and num_participant:

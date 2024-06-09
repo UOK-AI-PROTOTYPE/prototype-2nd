@@ -31,15 +31,17 @@ if "messages" not in st.session_state:
     ]
     modal.enter_modal()
 
-if 'target_name' in st.session_state and 'num_participant' in st.session_state:
+# first_question이 답변할 때마다 출력되는 문제 해결
+if 'target_name' in st.session_state and 'num_participant' in st.session_state and "start" not in st.session_state:
     target_name = st.session_state['target_name'] # 분석대상 이름
     num_participant = st.session_state['num_participant'] # 총 참여자 수
+    st.session_state.start = []
 
     # 첫번째 질문 (하드코딩)
     first_question = f"""안녕하세요, {target_name}님.
     총 {num_participant}분이 MBTI분석에 참여하시는군요.:)  
     첫번째 질문드리겠습니다.  
-    본인과 가장 셩격이나 행동이 비슷한 영화 캐릭터는 무엇인가요? 그 이유도 함께 알려주세요."""
+    가장 선호하는 영화와 그 이유, 또는 가장 선호하는 장면을 알려주세요."""
 
     # 첫번째 질문 messages에 추가
     st.session_state.messages.append({"role": "assistant", "content": first_question})
