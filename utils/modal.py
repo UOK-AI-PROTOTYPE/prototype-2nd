@@ -19,20 +19,23 @@ def enter_modal():
             st.warning("모든 항목을 입력해주세요.")
             
 
-# @st.experimental_dialog("이제부터는 00님의 지인이 대화할 차례에요 !")
-# def trigger2():
-#     user2_name = st.text_input("이름을 입력해주세요")
-#     user2_relation = st.selectbox(
-#         "00님과의 관계는?",
-#         options=("본인", "가족", "친구", "친척", "동료"),
-#         index=None,
-#         placeholder="관계 설정 고고링"
-#     )
-#     if st.button("분석 시작하기"):
-#         st.session_state.messages.append({"role": "user", "content": user2_relation, "userInfo": user2_name})
-#         # st.session_state.relation = {"name": user2_name, "relation": user2_relation}
-#         # print(st.session_state.messages)
-#         st.rerun()
+@st.experimental_dialog("""이제부터는 지인이 대화할 차례에요 !
+                        이름과 관계를 알려주세요.""")
+def user_change(target_name):
+    user2_name = st.text_input("이름을 입력해주세요")
+    user2_relation = st.selectbox(
+        f"{target_name}님과의 관계는?",
+        options=("가족", "친구", "친척", "동료", "기타"),
+        index=None,
+        placeholder="관계를 설정해주세요"
+    )
+    if st.button("분석 시작하기"):
+        st.session_state.messages.append({"role": "assistant", "content": 
+            f"""안녕하세요, {user2_name}님.
+            {target_name}님과 {user2_relation} 관계이시군요!
+            그럼 이제 {target_name}님에 대해 질문 드리겠습니다. 평소 {target_name}님은 어떤 캐릭터인가요?"""})
+        st.rerun()
+
 
 # UserChange
 @st.experimental_dialog("이제부터는 지인이 대화할 차례에요 !")
