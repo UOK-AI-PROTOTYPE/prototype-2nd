@@ -5,8 +5,8 @@ from utils.chat_background import chat_background
 from utils import modal
 import toml
 
-setting = toml.load('setting.toml')
-prompts = toml.load('prompts.toml')
+setting = toml.load('static/toml/setting.toml')
+prompts = toml.load('static/toml/prompts.toml')
 
 st.set_page_config(
     initial_sidebar_state="collapsed",

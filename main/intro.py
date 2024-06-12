@@ -7,7 +7,7 @@ def load_css(file_path):
     with open(file_path) as f:
         return f.read()
 
-css_content = load_css("src/intro.css")
+css_content = load_css("static/css/intro.css")
 
 
 def set_intro():

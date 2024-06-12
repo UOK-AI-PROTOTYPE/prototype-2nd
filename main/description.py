@@ -7,7 +7,7 @@ def load_css(file_path):
     with open(file_path) as f:
         return f.read()
 
-css_content = load_css("src/description.css")
+css_content = load_css("static/css/description.css")
 
 
 def set_description():
@@ -29,7 +29,7 @@ def set_description():
     """
     components.html(html_code, height=700)
 
-    st.image("src/image/description.png", width=700)
+    st.image("assets/image/description.png", width=700)
 
     html_code = f"""
     <!DOCTYPE html>

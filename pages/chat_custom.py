@@ -13,9 +13,9 @@ st.set_page_config(
 
 set_navbar()
 
-setting = toml.load('setting.toml')
-prompts = toml.load('prompts.toml')
-json_styles = 'styles.json'
+setting = toml.load('static/toml/setting.toml')
+prompts = toml.load('static/toml/prompts.toml')
+json_styles = 'staitc/json/styles.json'
 
 pages = ["ChatBot", "UOK"]
 urls = {"UOK": setting["urls"]}

@@ -1,13 +1,12 @@
 import streamlit as st
 from utils.main_background import main_background
-from intro import set_intro
-from utils.modal import enter_modal
-from description import set_description
+from main.intro import set_intro
+from main.description import set_description
 import toml
 
-setting = toml.load('setting.toml')
-prompts = toml.load('prompts.toml')
-json_styles = 'styles.json'
+setting = toml.load('static/toml/setting.toml')
+prompts = toml.load('static/toml/prompts.toml')
+json_styles = 'staitc/json/styles.json'
 
 st.set_page_config(
     initial_sidebar_state="collapsed",
