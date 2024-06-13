@@ -12,7 +12,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 # 로그인 모달
 @st.experimental_dialog("로그인 후 서비스를 이용해주세요 🥹")
-def signIn():
+def signIn_modal():
     email = st.text_input("Email", placeholder="이메일을 입력해주세요")
     password = st.text_input("Password", placeholder="비밀번호를 입력해주세요", type="password")
 
@@ -27,7 +27,7 @@ def signIn():
 
     if st.button("로그인", use_container_width=True, type="primary"):
         user = get_user(email)
-        if user and verify_password(password, user[2]):
+        if user and verify_password(password, user[3]):
             st.success(f"{email}님, 로그인 성공!")
             st.switch_page("pages/database.py")
         else:
@@ -36,11 +36,14 @@ def signIn():
     if st.button("회원가입", use_container_width=True):
         st.switch_page("pages/sign_up.py")
 
-    # 글씨에 링크 입혀서 오른쪽 정렬
-    # st.markdown(f"""
-    #     <div style="display: flex; justify-content: flex-end;">
-    #         <a href="{sign_up_url}" target="_self" style="text-decoration: none;">
-    #             <h4>회원가입</h4>
-    #         </a>
-    #     </div>
-    # """, unsafe_allow_html=True)
+
+
+
+        # 글씨에 링크 입혀서 오른쪽 정렬
+        # st.markdown(f"""
+        #     <div style="display: flex; justify-content: flex-end;">
+        #         <a href="{sign_up_url}" target="_self" style="text-decoration: none;">
+        #             <h4>회원가입</h4>
+        #         </a>
+        #     </div>
+        # """, unsafe_allow_html=True)

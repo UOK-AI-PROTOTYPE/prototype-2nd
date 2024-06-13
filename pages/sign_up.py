@@ -31,7 +31,6 @@ gender = st.selectbox(
     placeholder="성별 선택하기"
 )
 
-# HTML and CSS to align button to the right
 st.markdown("""
     <style>
     .stButton button {
@@ -41,12 +40,12 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 if st.button("회원가입"):
-    if username and password and confirm_password:
+    if email and password and confirm_password:
         if password == confirm_password:
             hashed_password = hash_password(password)
             try:
-                add_user(username, hashed_password)
-                st.success(f"환영합니다, {username}님!")
+                add_user(email, hashed_password)
+                st.success(f"환영합니다, {email}님!")
             except sqlite3.IntegrityError:
                 st.error("사용자명이 이미 존재합니다.")
         else:

@@ -26,7 +26,7 @@ def add_user(email, hashed_password):
 def get_user(email):
     with closing(sqlite3.connect(DATABASE)) as conn:
         with closing(conn.cursor()) as cur:
-            cur.execute('SELECT * FROM users WHERE eamil= = ?', (email,))
+            cur.execute('SELECT * FROM users WHERE email= ?', (email,))
             return cur.fetchone()
-
+    
 create_table()
