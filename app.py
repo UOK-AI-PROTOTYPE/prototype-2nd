@@ -19,5 +19,5 @@ main_background()
 set_intro()
 set_description()
 
-if st.button("지금 바로 분석 하러가기"):
+if st.button("지금 바로 분석 하러가기", type="primary"):
     st.switch_page("pages/chat.py")
