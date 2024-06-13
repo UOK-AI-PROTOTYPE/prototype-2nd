@@ -2,6 +2,7 @@ import streamlit as st
 from utils.main_background import main_background
 from main.intro import set_intro
 from main.description import set_description
+from pages.sign_in import signIn
 import toml
 
 setting = toml.load('static/toml/setting.toml')
@@ -19,5 +20,16 @@ main_background()
 set_intro()
 set_description()
 
+# CSS for alignment
+st.markdown("""
+    <style>
+    div.stButton > button {
+        display: block;
+        margin: 0 auto;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 if st.button("지금 바로 분석 하러가기"):
-    st.switch_page("pages/sign_up.py")
+    signIn()
+    # st.switch_page("pages/sign_up.py")
