@@ -5,7 +5,26 @@ from utils.db import add_user, get_user
 conn = sqlite3.connect('example.db') #DB연결
 cursor = conn.cursor()  # 커서 객체 생성
 
-# 챗봇 입장시
+# # 챗봇 입장시
+# @st.experimental_dialog("분석 대상자의 정보를 알려주세요 !")
+# def enter_modal():
+#     target_name = st.text_input("분석대상의 이름을 입력해주세요")
+#     num_participant = st.number_input("총 참여자 수를 입력해주세요", min_value=1, value=None)
+#     if st.button("제출", type="primary"):
+#         if target_name and num_participant:
+#             st.session_state['target_name'] = target_name
+#             st.session_state['num_participant'] = num_participant
+#             # st.switch_page("pages/chat.py")
+#             cursor.execute(f'''
+#                 INSERT INTO userInfo (name, num_participant)
+#                 VALUES ('{target_name}', '{num_participant}')
+#             ''')
+#             conn.commit()
+#             st.rerun()
+#         else:
+#             st.warning("모든 항목을 입력해주세요.")
+
+
 @st.experimental_dialog("분석 대상자의 정보를 알려주세요 !")
 def enter_modal():
     target_name = st.text_input("분석대상의 이름을 입력해주세요")
@@ -15,11 +34,11 @@ def enter_modal():
             st.session_state['target_name'] = target_name
             st.session_state['num_participant'] = num_participant
             # st.switch_page("pages/chat.py")
-            cursor.execute(f'''
-                INSERT INTO userInfo (name, num_participant)
-                VALUES ('{target_name}', '{num_participant}')
-            ''')
-            conn.commit()
+            # cursor.execute(f'''
+            #     INSERT INTO userInfo (name, num_participant)
+            #     VALUES ('{target_name}', '{num_participant}')
+            # ''')
+            # conn.commit()
             st.rerun()
         else:
             st.warning("모든 항목을 입력해주세요.")

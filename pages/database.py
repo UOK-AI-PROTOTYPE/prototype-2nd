@@ -25,22 +25,20 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = setting["openai_model"]
 
-if "conversation_count" not in st.session_state:
-    st.session_state["conversation_count"] = 0
-
+if "user_info" not in st.session_state:
+    signIn_modal()
+else:
+    if "ex" not in st.session_state:
+        st.session_state['ex']=0
+        modal.enter_modal()
+        # modal.enter_modal2()
+        
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "system", "content": prompts["setting_prompt"]}
     ]
-    # modal.enter_modal()
-
-if "user_info" not in st.session_state:
-    signIn_modal()
-else:
-    target_name = st.session_state["user_info"]
-    print("1:", target_name)
-    modal.enter_modal2(target_name)
-
+    # if "user_info" in st.session_state:
+    #     modal.enter_modal()
 
 # first_question이 답변할 때마다 출력되는 문제 해결
 if 'target_name' in st.session_state and 'num_participant' in st.session_state and "start" not in st.session_state:

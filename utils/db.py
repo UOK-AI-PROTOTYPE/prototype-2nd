@@ -34,12 +34,12 @@ def create_table():
 def add_user(email, username, hashed_password):
     with closing(sqlite3.connect(DATABASE)) as conn:
         with conn as cur:
-            cur.execute('INSERT INTO users (email, username, hashed_password) VALUES (?, ?, ?)', (email, username, hashed_password))
+            cur.execute('INSERT INTO userInfo (email, username, hashed_password) VALUES (?, ?, ?)', (email, username, hashed_password))
 
 def get_user(email):
     with closing(sqlite3.connect(DATABASE)) as conn:
         with closing(conn.cursor()) as cur:
-            cur.execute('SELECT * FROM users WHERE email= ?', (email,))
+            cur.execute('SELECT * FROM userInfo WHERE email= ?', (email,))
             return cur.fetchone()
         
 def get_user_info():
