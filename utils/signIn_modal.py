@@ -27,23 +27,14 @@ def signIn_modal():
 
     if st.button("로그인", use_container_width=True, type="primary"):
         user = get_user(email)
-        if user and verify_password(password, user[3]):
-            st.success(f"{email}님, 로그인 성공!")
-            st.switch_page("pages/database.py")
+        if user and verify_password(password, user[3]):   
+            target_name = user[2]
+            if "user_info" not in st.session_state:
+                st.session_state["user_info"] = target_name
+            st.success(f"{target_name}님, 로그인 성공!")
+            st.rerun()
         else:
             st.error("로그인 실패. 사용자명 또는 비밀번호를 확인하세요.")
-    
+
     if st.button("회원가입", use_container_width=True):
         st.switch_page("pages/sign_up.py")
-
-
-
-
-        # 글씨에 링크 입혀서 오른쪽 정렬
-        # st.markdown(f"""
-        #     <div style="display: flex; justify-content: flex-end;">
-        #         <a href="{sign_up_url}" target="_self" style="text-decoration: none;">
-        #             <h4>회원가입</h4>
-        #         </a>
-        #     </div>
-        # """, unsafe_allow_html=True)

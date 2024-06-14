@@ -2,12 +2,9 @@ import streamlit as st
 from openai import OpenAI
 from streamlit_chat import message
 from utils.chat_background import chat_background
-import utils.connection as db_conn
 from utils import modal
+from utils.signIn_modal import signIn_modal
 import toml
-
-conn, cursor = db_conn.create_connection()  # 데이터베이스 연결 및 테이블 생성
-user_info_rows, user_result_rows = db_conn.fetch_data(cursor)  # 데이터 조회 및 출력
 
 setting = toml.load('static/toml/setting.toml')
 prompts = toml.load('static/toml/prompts.toml')
@@ -23,10 +20,6 @@ chat_background()
 st.title("UOK 성향 추론 챗봇")
 st.write("챗봇과의 대화를 통해 사용자의 성향을 파악할 수 있습니다. 지금 바로 대화를 나눠보세요!")
 
-####### 데이터 출력
-st.write("userInfo 테이블 데이터:", user_info_rows)
-st.write("userResult 테이블 데이터:", user_result_rows)
-
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 if "openai_model" not in st.session_state:
@@ -39,7 +32,15 @@ if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "system", "content": prompts["setting_prompt"]}
     ]
-    modal.enter_modal()
+    # modal.enter_modal()
+
+if "user_info" not in st.session_state:
+    signIn_modal()
+else:
+    target_name = st.session_state["user_info"]
+    print("1:", target_name)
+    modal.enter_modal2(target_name)
+
 
 # first_question이 답변할 때마다 출력되는 문제 해결
 if 'target_name' in st.session_state and 'num_participant' in st.session_state and "start" not in st.session_state:

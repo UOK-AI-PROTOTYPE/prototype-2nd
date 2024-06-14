@@ -31,4 +31,5 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 if st.button("지금 바로 분석 하러가기"):
-    signIn_modal()
+    # signIn_modal()
+    st.switch_page("pages/database.py")
