@@ -28,9 +28,9 @@ def signIn_modal():
     if st.button("로그인", use_container_width=True, type="primary"):
         user = get_user(email)
         if user and verify_password(password, user[3]):   
-            target_name = user[2]
-            if "user_info" not in st.session_state:
-                st.session_state["user_info"] = target_name
+            target_id, target_name = user[0], user[2]
+            if "user_info" not in st.session_state: #[user_info]=[타겟id, 타겟이름]
+                st.session_state["user_info"] = [target_id, target_name]
             st.success(f"{target_name}님, 로그인 성공!")
             st.rerun()
         else:

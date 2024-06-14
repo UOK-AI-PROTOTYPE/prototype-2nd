@@ -30,8 +30,8 @@ if "user_info" not in st.session_state:
 else:
     if "ex" not in st.session_state:
         st.session_state['ex']=0
-        modal.enter_modal()
-        # modal.enter_modal2()
+        # modal.enter_modal()
+        modal.enter_modal2()
         
 if "messages" not in st.session_state:
     st.session_state.messages = [

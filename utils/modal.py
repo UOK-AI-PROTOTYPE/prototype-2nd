@@ -1,6 +1,6 @@
 import streamlit as st
 import sqlite3
-from utils.db import add_user, get_user
+from utils.db import add_user, get_user, add_userResult
 
 conn = sqlite3.connect('example.db') #DB연결
 cursor = conn.cursor()  # 커서 객체 생성
@@ -44,22 +44,18 @@ def enter_modal():
             st.warning("모든 항목을 입력해주세요.")
 
 
-@st.experimental_dialog("분석 대상자의 정보를 알려주세요 !")
-def enter_modal2(target_name):
-    # user = get_user(email)
-    # target_name=user[2]
+# 로그인 모달과 연계되는 모달 - 수정 버전
+@st.experimental_dialog("분석에 참여할 인원을 알려주세요 !")
+def enter_modal2():
+    target_id, target_name = st.session_state.user_info[0], st.session_state.user_info[1]
     st.subheader(f"안녕하세요, {target_name}님.")
     num_participant = st.number_input("총 참여자 수를 입력해주세요", min_value=1, value=None)
     if st.button("제출", type="primary"):
         if target_name and num_participant:
             st.session_state['target_name'] = target_name
             st.session_state['num_participant'] = num_participant
-            # st.switch_page("pages/chat.py")
-            cursor.execute(f'''
-                INSERT INTO userInfo (name, num_participant)
-                VALUES ('{target_name}', '{num_participant}')
-            ''')
-            conn.commit()
+            # DB에 참여인원을 저장할 필요?
+            # add_userResult(target_id, target_name, target_id, target_name, "self", "")
             st.rerun()
         else:
             st.warning("모든 항목을 입력해주세요.")
