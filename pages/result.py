@@ -1,4 +1,5 @@
 import streamlit as st
+from openai import OpenAI
 from streamlit_chat import message
 from utils import modal
 

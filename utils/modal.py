@@ -28,8 +28,8 @@ def user_change(target_name, response):
     )
     if st.button("분석 시작하기", type="primary"):
         if new_user_name and new_user_relation:
-            # user_info에 새 사용자의 이름, 관계 저장
-            st.session_state.user_info.append({"name": new_user_name, "relation": new_user_relation})
+            # user_data에 새 사용자의 이름, 관계 저장
+            st.session_state.user_data.append({"name": new_user_name, "relation": new_user_relation, "result": None})
             st.session_state.messages.append({"role": "assistant", "content": 
                 f"""안녕하세요, {new_user_name}님.
                 {target_name}님과 {new_user_relation} 관계이시군요!
