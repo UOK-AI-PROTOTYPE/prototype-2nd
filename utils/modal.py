@@ -7,13 +7,9 @@ cursor = conn.cursor()  # 커서 객체 생성
 # 챗봇 입장시
 @st.experimental_dialog("분석 대상자의 정보를 알려주세요 !")
 def enter_modal():
-    with st.form("input_form"):
-        st.write("엔터키를 누르지 말아주세요.") # 엔터키 입력으로 인한 문제 방지를 위해 문구 추가
-        target_name = st.text_input("분석대상의 이름을 입력해주세요")
-        num_participant = st.number_input("총 참여자 수를 입력해주세요", min_value=1, value=None)
-        submit_button = st.form_submit_button(label='제출', type="primary")
-    
-    if submit_button:
+    target_name = st.text_input("분석대상의 이름을 입력해주세요")
+    num_participant = st.number_input("총 참여자 수를 입력해주세요", min_value=1, value=None)
+    if st.button("제출", type="primary"):
         if target_name and num_participant:
             st.session_state['target_name'] = target_name
             st.session_state['num_participant'] = num_participant
@@ -27,7 +23,7 @@ def enter_modal():
         else:
             st.warning("모든 항목을 입력해주세요.")
             
-
+# 사용자 전환시
 @st.experimental_dialog("""이제부터는 지인이 대화할 차례에요 !
                         이름과 관계를 알려주세요.""")
 def user_change(target_name, num_participant):
@@ -38,6 +34,7 @@ def user_change(target_name, num_participant):
         index=None,
         placeholder="관계를 설정해주세요"
     )
+
     if st.button("분석 시작하기"):
         st.session_state.messages.append({"role": "assistant", "content": 
             f"""안녕하세요, {user2_name}님.
