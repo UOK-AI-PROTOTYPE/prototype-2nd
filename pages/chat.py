@@ -2,6 +2,7 @@ import streamlit as st
 from openai import OpenAI
 from streamlit_chat import message
 from utils.chat_background import chat_background
+from utils.db import add_user, get_user, add_userResult, get_user_info, get_user_result
 from utils import modal
 import toml
 
@@ -29,8 +30,8 @@ if "openai_model" not in st.session_state:
 if "user_info" not in st.session_state:
     modal.signIn_modal()
 else:
-    if "ex" not in st.session_state: #이 부분 수정 필요
-        st.session_state['ex']=0
+    if "participant" not in st.session_state:
+        st.session_state["participant"] = []
         modal.enter_modal()
 
 if "messages" not in st.session_state:
@@ -96,13 +97,28 @@ if prompt := st.chat_input("답변을 작성해주세요 !"):
 
     if check_analysis(response):
         target_name = st.session_state['target_name']
-        if "user_data" not in st.session_state:
-            st.session_state.user_data = [{"name": target_name, "relation": "본인", "result": response}]
+        target_id = st.session_state.user_info[1]
+        # 본인인 경우
+        if len(st.session_state.participant)==0:
+            # st.session_state.user_data = [{"name": target_name, "relation": "본인", "result": response}]
+            add_userResult(target_id, target_name, target_name, "본인", response, "")
+        # 타인인 경우
         else:
-            st.session_state.user_data[-1]["result"] = response
+            # st.session_state.user_data[-1]["result"] = response
+            # participant_name, relation = st.session_state.participant[0], st.session_state.participant[1]
+
+            participant = st.session_state["participant"][-1]
+            participant_name = list(participant.keys())[0]
+            relation = participant[participant_name]
+            #mbti=''
+            add_userResult(target_id, target_name, participant_name, relation, response, "")
+            # get_user_info()
+            # get_user_result()
 
         if st.session_state['remaining_users'] == 1:
+            st.write(get_user_info())
+            st.write(get_user_result())
             modal.end_modal(response)
         else:
             st.session_state['remaining_users'] -= 1
-            modal.user_change(target_name, response)
+            modal.user_change(target_name)

@@ -20,7 +20,7 @@ def enter_modal():
     if st.button("제출", type="primary"):
         if target_name and num_participant:
             st.session_state['target_name'] = target_name
-            st.session_state['num_participant'] = num_participant             # DB에 참여인원을 저장할 필요?
+            st.session_state['num_participant'] = num_participant      
             st.rerun()
         else:
             st.warning("모든 항목을 입력해주세요.")
@@ -33,9 +33,35 @@ def end_modal(result):
         
 
 # 대상자 본인 채팅 이후 차례에서 뜨는 모달
+# @st.experimental_dialog("""이제부터는 지인이 대화할 차례에요 !
+#                         이름과 관계를 알려주세요.""")
+# def user_change(target_name, response):
+#     participant_name = st.text_input("이름을 입력해주세요")
+#     relation = st.selectbox(
+#         f"{target_name}님과의 관계는?",
+#         options=("가족", "친구", "친척", "동료", "기타"),
+#         index=None,
+#         placeholder="관계를 설정해주세요"
+#     )
+#     target_id, target_name = st.session_state.user_info[0], st.session_state.user_info[1]
+    
+#     # TODO : 결과값 추출 후 결과 저장하기
+#     result=response
+#     # 저장
+#     add_userResult(target_id, target_name, participant_name, relation, result)
+
+#     if st.button("분석 시작하기"):
+#         st.session_state.messages.append({"role": "assistant", "content": 
+#             f"""안녕하세요, {participant_name}님.
+#             {target_name}님과 {relation} 관계이시군요!
+#             그럼 이제 {target_name}님에 대해 질문 드리겠습니다. 평소 {target_name}님은 어떤 캐릭터인가요?"""})
+#         st.rerun()
+
+
+
 @st.experimental_dialog("""이제부터는 지인이 대화할 차례에요 !
                         이름과 관계를 알려주세요.""")
-def user_change(target_name, num_participant):
+def user_change(target_name):
     participant_name = st.text_input("이름을 입력해주세요")
     relation = st.selectbox(
         f"{target_name}님과의 관계는?",
@@ -43,12 +69,13 @@ def user_change(target_name, num_participant):
         index=None,
         placeholder="관계를 설정해주세요"
     )
-    target_id, target_name = st.session_state.user_info[0], st.session_state.user_info[1]
+    # target_id, target_name = st.session_state.user_info[0], st.session_state.user_info[1]
     
-    # TODO : 결과값 추출 후 결과 저장하기
-    result=''
-    # 저장
-    add_userResult(target_id, target_name, participant_name, relation, result)
+    # # TODO : 결과값 추출 후 결과 저장하기
+    # result=response
+    # # 저장
+    # add_userResult(target_id, target_name, participant_name, relation, result)
+    st.session_state["participant"].append({participant_name: relation})
 
     if st.button("분석 시작하기"):
         st.session_state.messages.append({"role": "assistant", "content": 
@@ -56,6 +83,8 @@ def user_change(target_name, num_participant):
             {target_name}님과 {relation} 관계이시군요!
             그럼 이제 {target_name}님에 대해 질문 드리겠습니다. 평소 {target_name}님은 어떤 캐릭터인가요?"""})
         st.rerun()
+    return participant_name, relation
+
 
 
 
