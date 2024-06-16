@@ -1,9 +1,14 @@
 import streamlit as st
-import sqlite3
 from utils.db import add_user, get_user, add_userResult
+import bcrypt
 
-conn = sqlite3.connect('example.db') #DB연결
-cursor = conn.cursor()  # 커서 객체 생성
+
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+
 
 
 # 챗봇 입장시 :  로그인 모달과 연계되는 모달 - 수정 버전
@@ -19,6 +24,8 @@ def enter_modal():
             st.rerun()
         else:
             st.warning("모든 항목을 입력해주세요.")
+
+
 
 # 대상자 본인 채팅 이후 차례에서 뜨는 모달
 @st.experimental_dialog("""이제부터는 지인이 대화할 차례에요 !
@@ -44,3 +51,36 @@ def user_change(target_name, num_participant):
             {target_name}님과 {relation} 관계이시군요!
             그럼 이제 {target_name}님에 대해 질문 드리겠습니다. 평소 {target_name}님은 어떤 캐릭터인가요?"""})
         st.rerun()
+
+
+
+# 로그인 모달
+@st.experimental_dialog("로그인 후 서비스를 이용해주세요 🥹")
+def signIn_modal():
+    email = st.text_input("Email", placeholder="이메일을 입력해주세요")
+    password = st.text_input("Password", placeholder="비밀번호를 입력해주세요", type="password")
+
+    st.markdown("""
+        <style>
+        .stButton button {
+            height: 2.8rem;
+            margin-top: 1.5rem;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    if st.button("로그인", use_container_width=True, type="primary"):
+        user = get_user(email)
+        if user and verify_password(password, user[3]):   
+            target_id, target_name = user[0], user[2]
+            
+            # 사용자들의 정보(이름, 관계)를 user_info에 저장
+            if "user_info" not in st.session_state: #[user_info]=[타겟id, 타겟이름]
+                st.session_state["user_info"] = [target_id, target_name]
+            st.success(f"{target_name}님, 로그인 성공!")
+            st.rerun()
+        else:
+            st.error("로그인 실패. 사용자명 또는 비밀번호를 확인하세요.")
+
+    if st.button("회원가입", use_container_width=True):
+        st.switch_page("pages/sign_up.py")
