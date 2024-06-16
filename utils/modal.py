@@ -81,6 +81,5 @@ def signIn_modal():
             st.rerun()
         else:
             st.error("로그인 실패. 사용자명 또는 비밀번호를 확인하세요.")
-
     if st.button("회원가입", use_container_width=True):
         st.switch_page("pages/sign_up.py")
