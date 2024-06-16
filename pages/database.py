@@ -28,17 +28,14 @@ if "openai_model" not in st.session_state:
 if "user_info" not in st.session_state:
     signIn_modal()
 else:
-    if "ex" not in st.session_state:
+    if "ex" not in st.session_state: #이 부분 수정 필요
         st.session_state['ex']=0
-        # modal.enter_modal()
-        modal.enter_modal2()
+        modal.enter_modal()
         
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "system", "content": prompts["setting_prompt"]}
     ]
-    # if "user_info" in st.session_state:
-    #     modal.enter_modal()
 
 # first_question이 답변할 때마다 출력되는 문제 해결
 if 'target_name' in st.session_state and 'num_participant' in st.session_state and "start" not in st.session_state:
