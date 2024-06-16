@@ -46,7 +46,7 @@ if st.button("회원가입"):
             try:
                 add_user(email, username, hashed_password)
                 st.success(f"환영합니다, {username}님!")
-                st.switch_page("pages/database.py")
+                st.switch_page("pages/chat.py")
             except sqlite3.IntegrityError:
                 st.error("이미 존재하는 이메일입니다.")
         else:
