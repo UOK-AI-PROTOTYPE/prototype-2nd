@@ -25,7 +25,12 @@ def enter_modal():
         else:
             st.warning("모든 항목을 입력해주세요.")
 
-
+@st.experimental_dialog("분석이 모두 끝났습니다 !")
+def end_modal(result):
+    st.session_state.result = result
+    if st.button("분석 결과 보러가기", type="primary"):
+        st.switch_page("pages/result.py")
+        
 
 # 대상자 본인 채팅 이후 차례에서 뜨는 모달
 @st.experimental_dialog("""이제부터는 지인이 대화할 차례에요 !
