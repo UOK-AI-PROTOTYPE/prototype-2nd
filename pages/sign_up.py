@@ -44,10 +44,11 @@ if st.button("회원가입"):
         if password == confirm_password:
             hashed_password = hash_password(password)
             try:
-                add_user(email, hashed_password)
-                st.success(f"환영합니다, {email}님!")
+                add_user(email, username, hashed_password)
+                st.success(f"환영합니다, {username}님!")
+                st.switch_page("pages/database.py")
             except sqlite3.IntegrityError:
-                st.error("사용자명이 이미 존재합니다.")
+                st.error("이미 존재하는 이메일입니다.")
         else:
             st.error("비밀번호가 일치하지 않습니다.")
     else:
