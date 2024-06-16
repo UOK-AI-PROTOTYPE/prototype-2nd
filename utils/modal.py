@@ -45,27 +45,3 @@ def end_modal(result):
     st.session_state.result = result
     if st.button("분석 결과 보러가기", type="primary"):
         st.switch_page("pages/result.py")
-
-
-# UserChange
-# @st.experimental_dialog("이제부터는 지인이 대화할 차례에요 !")
-# def userChange(target_name):
-#     user_name = st.text_input("이름을 입력해주세요")
-#     user_relation = st.selectbox(
-#         f"{target_name}님과의 관계는?",
-#         options=("가족", "친구", "친척", "동료", "기타"),
-#         index=None,
-#         placeholder="관계 설정 고고링"
-#     )
-
-#     if st.button("분석 시작하기", type="primary"):
-#         if user_name and user_relation:
-#             st.session_state['user_name'] = user_name
-#             st.session_state['user_relation'] = user_relation
-#             st.session_state.messages.append({
-#                 "role": "user",
-#                 "content": f"{user_name}: {user_relation}"
-#             })
-#             st.rerun
-#         else:
-#             st.warning("모든 항목을 입력해주세요.")

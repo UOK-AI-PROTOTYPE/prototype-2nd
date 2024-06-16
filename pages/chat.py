@@ -31,13 +31,6 @@ if "messages" not in st.session_state:
     ]
     modal.enter_modal()
 
-# 사용자들의 정보(이름, 관계)를 user_data에 저장
-if "user_data" not in st.session_state:
-    st.session_state.user_data = []
-
-if "result" not in st.session_state:
-    st.session_state.result = []
-
 # first_question이 답변할 때마다 출력되는 문제 해결
 if 'target_name' in st.session_state and 'num_participant' in st.session_state and "remaining_users" not in st.session_state:
     target_name = st.session_state['target_name'] # 분석대상 이름
@@ -53,7 +46,6 @@ if 'target_name' in st.session_state and 'num_participant' in st.session_state a
     # 첫번째 질문 messages에 추가
     st.session_state.messages.append({"role": "assistant", "content": first_question})
     print(st.session_state.messages)
-
 
 for message in st.session_state.messages[1:]:
     if message["role"] != "system":
@@ -71,12 +63,6 @@ def check_analysis(response):
     KEYWORDS_2 = ["ISTJ", "ISTP", "ISFJ", "ISFP", "INTJ", "INTP", "INFJ", "INFP", "ESTJ", "ESTP", "ESFJ", "ESFP", "ENTJ", "ENTP", "ENFJ", "ENFP", "istj", "istp", "isfj", "isfp", "intj", "intp", "infj", "infp", "estj", "estp", "esfj", "esfp", "entj", "entp", "enfj", "enfp"]
     
     return any(keyword in response for keyword in KEYWORDS_1) and any(keyword in response for keyword in KEYWORDS_2)
-
-def find_mbti(response):
-    upper_mbti = []
-    lower_mbti = []
-
-
 
 
 if prompt := st.chat_input("답변을 작성해주세요 !"):
@@ -102,7 +88,11 @@ if prompt := st.chat_input("답변을 작성해주세요 !"):
 
     if check_analysis(response):
         target_name = st.session_state['target_name']
-        st.session_state.result.append(response)
+        if "user_data" not in st.session_state:
+            st.session_state.user_data = [{"name": target_name, "relation": "본인", "result": response}]
+        else:
+            st.session_state.user_data[-1]["result"] = response
+
         if st.session_state['remaining_users'] == 1:
             modal.end_modal(response)
         else:
