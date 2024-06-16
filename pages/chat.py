@@ -25,11 +25,19 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = setting["openai_model"]
 
+
+if "user_info" not in st.session_state:
+    modal.signIn_modal()
+else:
+    if "ex" not in st.session_state: #이 부분 수정 필요
+        st.session_state['ex']=0
+        modal.enter_modal()
+
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "system", "content": prompts["setting_prompt"]}
     ]
-    modal.enter_modal()
+    # modal.enter_modal()
 
 # first_question이 답변할 때마다 출력되는 문제 해결
 if 'target_name' in st.session_state and 'num_participant' in st.session_state and "remaining_users" not in st.session_state:

@@ -19,5 +19,15 @@ main_background()
 set_intro()
 set_description()
 
-if st.button("지금 바로 분석 하러가기", type="primary"):
+# CSS for alignment
+st.markdown("""
+    <style>
+    div.stButton > button {
+        display: block;
+        margin: 0 auto;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+if st.button("지금 바로 분석 하러가기"):
     st.switch_page("pages/chat.py")
