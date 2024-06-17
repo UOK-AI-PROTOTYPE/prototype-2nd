@@ -29,5 +29,5 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-if st.button("지금 바로 분석 하러가기"):
+if st.button("지금 바로 분석 하러가기", type="primary"):
     st.switch_page("pages/chat.py")

@@ -43,7 +43,7 @@ if "messages" not in st.session_state:
 if 'target_name' in st.session_state and 'num_participant' in st.session_state and "remaining_users" not in st.session_state:
     target_name = st.session_state['target_name'] # 분석대상 이름
     num_participant = st.session_state['num_participant'] # 총 참여자 수
-    st.session_state['remaining_users'] = st.session_state['num_participant']
+    st.session_state['remaining_users'] = st.session_state['num_participant'] - 1
 
     # 첫번째 질문 (하드코딩)
     first_question = f"""안녕하세요, {target_name}님.
@@ -75,8 +75,8 @@ def check_analysis(response):
 
 if prompt := st.chat_input("답변을 작성해주세요 !"):
     st.session_state.messages.append({"role": "user", "content": prompt})
-    st.write(get_user_info())
-    st.write(get_user_result())
+    # st.write(get_user_info())
+    # st.write(get_user_result())
 
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -96,19 +96,21 @@ if prompt := st.chat_input("답변을 작성해주세요 !"):
         response = st.write_stream(stream)
     st.session_state.messages.append({"role": "assistant", "content": response})
 
-    if check_analysis(response):
+    if check_analysis(response):    # 챗봇의 답변이 분석결과인 경우
         target_name = st.session_state['target_name']
         target_id = st.session_state.user_info[0]
 
         if len(st.session_state.participant)==0:  # 본인인 경우
             add_userResult(target_id, target_name, target_name, "본인", response, "")
+            st.session_state.participant.append({"name": target_name, "relation": "본인", "result": response})
         else:  # 타인인 경우
-            participant = st.session_state["participant"][-1]
-            participant_name = list(participant.keys())[0]
-            relation = participant[participant_name]
+            participant = st.session_state.participant[-1]
+            participant_name = participant["name"]
+            relation = participant["relation"]
             add_userResult(target_id, target_name, participant_name, relation, response, "")
+            st.session_state.participant[-1]["result"] = response
 
-        if st.session_state['remaining_users'] == 1:
+        if st.session_state['remaining_users'] == 0:    # 마지막 유저 (남아있는 인원 : 0)
             modal.end_modal(response)
         else:
             st.session_state['remaining_users'] -= 1

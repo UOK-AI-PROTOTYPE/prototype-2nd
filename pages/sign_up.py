@@ -39,7 +39,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-if st.button("회원가입"):
+if st.button("회원가입", type="primary"):
     if email and password and confirm_password:
         if password == confirm_password:
             hashed_password = hash_password(password)

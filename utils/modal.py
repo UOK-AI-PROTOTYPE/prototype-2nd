@@ -47,9 +47,8 @@ def user_change(target_name):
         placeholder="관계를 설정해주세요"
     )
 
-    st.session_state["participant"].append({participant_name: relation})
-
-    if st.button("분석 시작하기"):
+    if st.button("분석 시작하기", type="primary"):
+        st.session_state.participant.append({"name": participant_name, "relation": relation, "result": None})
         st.session_state.messages.append({"role": "assistant", "content": 
             f"""안녕하세요, {participant_name}님.
             {target_name}님과 {relation} 관계이시군요!
