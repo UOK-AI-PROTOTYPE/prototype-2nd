@@ -11,6 +11,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 
+
 # 챗봇 입장시 :  로그인 모달과 연계되는 모달 - 수정 버전
 @st.experimental_dialog("분석에 참여할 인원을 알려주세요 !")
 def enter_modal():
@@ -32,33 +33,9 @@ def end_modal(result):
         st.switch_page("pages/result.py")
         
 
+
+
 # 대상자 본인 채팅 이후 차례에서 뜨는 모달
-# @st.experimental_dialog("""이제부터는 지인이 대화할 차례에요 !
-#                         이름과 관계를 알려주세요.""")
-# def user_change(target_name, response):
-#     participant_name = st.text_input("이름을 입력해주세요")
-#     relation = st.selectbox(
-#         f"{target_name}님과의 관계는?",
-#         options=("가족", "친구", "친척", "동료", "기타"),
-#         index=None,
-#         placeholder="관계를 설정해주세요"
-#     )
-#     target_id, target_name = st.session_state.user_info[0], st.session_state.user_info[1]
-    
-#     # TODO : 결과값 추출 후 결과 저장하기
-#     result=response
-#     # 저장
-#     add_userResult(target_id, target_name, participant_name, relation, result)
-
-#     if st.button("분석 시작하기"):
-#         st.session_state.messages.append({"role": "assistant", "content": 
-#             f"""안녕하세요, {participant_name}님.
-#             {target_name}님과 {relation} 관계이시군요!
-#             그럼 이제 {target_name}님에 대해 질문 드리겠습니다. 평소 {target_name}님은 어떤 캐릭터인가요?"""})
-#         st.rerun()
-
-
-
 @st.experimental_dialog("""이제부터는 지인이 대화할 차례에요 !
                         이름과 관계를 알려주세요.""")
 def user_change(target_name):
@@ -69,12 +46,7 @@ def user_change(target_name):
         index=None,
         placeholder="관계를 설정해주세요"
     )
-    # target_id, target_name = st.session_state.user_info[0], st.session_state.user_info[1]
-    
-    # # TODO : 결과값 추출 후 결과 저장하기
-    # result=response
-    # # 저장
-    # add_userResult(target_id, target_name, participant_name, relation, result)
+
     st.session_state["participant"].append({participant_name: relation})
 
     if st.button("분석 시작하기"):
