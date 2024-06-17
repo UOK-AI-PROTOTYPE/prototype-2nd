@@ -20,6 +20,7 @@ def create_table():
             ''')
             # userResult 테이블 : id, 타겟id, 타겟이름, 지인id, 지인이름, 관계, 결과
             # 지인도 계정이 연동되어야한다면 participant_id INTEGER NOT NULL, 이 추가되어야함
+            #E70S50T60P65 형식, 필요시 수정
             cur.execute('''
                 CREATE TABLE IF NOT EXISTS userResult (
                     id INTEGER PRIMARY KEY,
@@ -27,7 +28,8 @@ def create_table():
                     target_name TEXT NOT NULL,
                     participant_name TEXT NOT NULL,
                     relation TEXT,
-                    result TEXT
+                    result TEXT,
+                    mbti TEXT 
                 )
             ''')
             # 변경사항 저장
@@ -48,10 +50,25 @@ def add_user(email, username, hashed_password):
 
 # 유저 분석 결과 저장
 # userResult 테이블 : id, 타겟id, 타겟이름, 지인이름, 관계, 결과
-def add_userResult(target_id, target_name, participant_name, relation, result):
+def add_userResult(target_id, target_name, participant_name, relation, result, mbti):
     with closing(sqlite3.connect(DATABASE)) as conn:
         with conn as cur:
-            cur.execute('INSERT INTO userResult (target_id, target_name, participant_name, relation, result) VALUES (?, ?, ?, ?, ?)', (target_id, target_name, participant_name, relation, result))
+            cur.execute('INSERT INTO userResult (target_id, target_name, participant_name, relation, result, mbti) VALUES (?, ?, ?, ?, ?, ?)', (target_id, target_name, participant_name, relation, result, mbti))
+
+# # 이메일로 유저 분석 결과 조회
+# def get_user_result_by_email(email):
+#     with closing(sqlite3.connect(DATABASE)) as conn:
+#         with closing(conn.cursor()) as cur:
+#             # 이메일로 유저 조회
+#             cur.execute('SELECT id FROM userInfo WHERE email = ?', (email,))
+#             user = cur.fetchone()
+#             if user:
+#                 user_id = user[0]
+#                 # 해당 유저의 분석 결과 조회
+#                 cur.execute('SELECT * FROM userResult WHERE target_id = ?', (user_id,))
+#                 return cur.fetchall()
+#             else:
+#                 return None
 
 # 유저 정보 전체 조회
 def get_user_info():
