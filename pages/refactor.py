@@ -37,7 +37,7 @@ else:
         st.session_state["participant"] = []
         modal.enter_modal()
 
-# GPT API를 사용하여 질문을 생성하는 함수
+######## GPT API를 사용하여 질문을 생성하는 함수
 def generate_initial_question(target_name, num_participant):
     response = client.chat.completions.create(
         model=st.session_state["openai_model"],
@@ -76,8 +76,7 @@ def check_analysis(response):
 
 if prompt := st.chat_input("답변을 작성해주세요 !"):
     st.session_state.messages.append({"role": "user", "content": prompt})
-    # st.write(get_user_info())
-    # st.write(get_user_result())
+    st.write(st.session_state.messages)
 
     with st.chat_message("user"):
         st.markdown(prompt)
