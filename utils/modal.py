@@ -94,7 +94,7 @@ def signIn_modal():
         <style>
         .stButton button {
             height: 2.8rem;
-            margin-top: 1.5rem;
+            margin-top: 0.4rem;
         }
         </style>
     """, unsafe_allow_html=True)
