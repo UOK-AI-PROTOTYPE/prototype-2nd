@@ -31,7 +31,7 @@ if "user_info" not in st.session_state:
     modal.signIn_modal()
 else:
     if "participant" not in st.session_state:
-        st.session_state["participant"] = []
+        st.session_state.participant = []
         modal.enter_modal()
 
 if "messages" not in st.session_state:
