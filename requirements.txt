@@ -2,3 +2,4 @@ openai==1.33.0
 streamlit
 streamlit-chat
 streamlit-navigation-bar
+bcrypt
