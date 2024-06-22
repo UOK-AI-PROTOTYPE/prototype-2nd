@@ -1,7 +1,9 @@
 import streamlit as st
 from utils.db import add_user, get_user, add_userResult
 import bcrypt
-
+from openai import OpenAI
+from streamlit_chat import message
+import toml
 
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -9,6 +11,28 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
 
+def generate_question(target_name, participant_name, relation):
+    messages=[ 
+        {"role": m["role"], "content": m["content"]}
+        for m in st.session_state.messages
+    ].copy()
+    messages.append({
+        "role": "assistant", 
+        "content": 
+            f"""target_name: {target_name}, participant_name :{participant_name}, relation: {relation},
+            이제 분석대상인 {target_name}에 대해서 {relation} 관계인 {participant_name}가 대화에 참여할거야.
+            안녕하세요 {participant_name}님, {target_name}과 {relation} 관계이시군요! 라는 문장을 답변에 필수로 포함하고 분석을 진행해줘."""
+            })
+
+    response = client.chat.completions.create(
+        model=st.session_state["openai_model"],
+        messages=messages
+    )
+    return response.choices[0].message.content
+
+
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+prompts = toml.load('static/toml/prompts.toml')
 
 
 # 챗봇 입장시 :  로그인 모달과 연계되는 모달 - 수정 버전
@@ -20,11 +44,13 @@ def enter_modal():
     if st.button("제출", type="primary"):
         if target_name and num_participant:
             st.session_state['target_name'] = target_name
-            st.session_state['num_participant'] = num_participant             # DB에 참여인원을 저장할 필요?
+            st.session_state['num_participant'] = num_participant      
             st.rerun()
         else:
             st.warning("모든 항목을 입력해주세요.")
 
+
+# end_modal
 @st.experimental_dialog("분석이 모두 끝났습니다 !")
 def end_modal(result):
     st.session_state.result = result
@@ -32,10 +58,12 @@ def end_modal(result):
         st.switch_page("pages/result.py")
         
 
-# 대상자 본인 채팅 이후 차례에서 뜨는 모달
+
+
+# 대상자 본인 채팅 이후 차례에서 뜨는 모달 - 수정버전(gpt api가 첫질문)
 @st.experimental_dialog("""이제부터는 지인이 대화할 차례에요 !
                         이름과 관계를 알려주세요.""")
-def user_change(target_name, num_participant):
+def user_change(target_name):
     participant_name = st.text_input("이름을 입력해주세요")
     relation = st.selectbox(
         f"{target_name}님과의 관계는?",
@@ -43,19 +71,16 @@ def user_change(target_name, num_participant):
         index=None,
         placeholder="관계를 설정해주세요"
     )
-    target_id, target_name = st.session_state.user_info[0], st.session_state.user_info[1]
-    
-    # TODO : 결과값 추출 후 결과 저장하기
-    result=''
-    # 저장
-    add_userResult(target_id, target_name, participant_name, relation, result)
+
+    st.session_state["participant"].append({participant_name: relation})
 
     if st.button("분석 시작하기"):
-        st.session_state.messages.append({"role": "assistant", "content": 
-            f"""안녕하세요, {participant_name}님.
-            {target_name}님과 {relation} 관계이시군요!
-            그럼 이제 {target_name}님에 대해 질문 드리겠습니다. 평소 {target_name}님은 어떤 캐릭터인가요?"""})
+        stream = generate_question(target_name, participant_name, relation)
+        st.session_state.messages.append({"role": "assistant", "content": stream})
         st.rerun()
+    return participant_name, relation
+
+
 
 
 
@@ -69,7 +94,7 @@ def signIn_modal():
         <style>
         .stButton button {
             height: 2.8rem;
-            margin-top: 1.5rem;
+            margin-top: 0.4rem;
         }
         </style>
     """, unsafe_allow_html=True)
