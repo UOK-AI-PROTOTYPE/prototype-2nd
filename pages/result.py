@@ -16,27 +16,6 @@ def find_mbti(result):
 if "mbti" not in st.session_state:
     st.session_state.mbti = []
 
-def getMBTI(E, N , F, J):
-    mbti = ""
-    if E > 50:
-        mbti += "E"
-    else:
-        mbti += "I"
-    if N > 50:
-        mbti += "N"
-    else:
-        mbti += "S"
-    if F > 50:
-        mbti += "F"
-    else:
-        mbti += "T"
-    if J > 50:
-        mbti += "J"
-    else:
-        mbti += "P"
-        
-    return mbti
-
 sum_E = 0
 sum_N = 0
 sum_F = 0
@@ -89,88 +68,146 @@ other_N = (sum_N - self_N) // (st.session_state['num_participant'] - 1)
 other_F = (sum_F - self_F) // (st.session_state['num_participant'] - 1)
 other_J = (sum_J - self_J) // (st.session_state['num_participant'] - 1)
 
-total_mbti = getMBTI(total_E, total_N, total_F, total_J)
-other_mbti = getMBTI(other_E, other_N, other_F, other_J)
+def getGraph(type, E, N, F, J):
+    mbti = ""
+    if E >= 50:
+        mbti += "E"
+    else:
+        mbti += "I"
+    if N >= 50:
+        mbti += "N"
+    else:
+        mbti += "S"
+    if F >= 50:
+        mbti += "F"
+    else:
+        mbti += "T"
+    if J >= 50:
+        mbti += "J"
+    else:
+        mbti += "P"
 
-     
+    labels = ['E / I', 'N / S', 'F / T', 'J / P']
+    left_labels= ['E', 'N', 'F', 'J']
+    right_labels = ['I', 'S', 'T', 'P']
+    left_values = [E, N , F, J]
+    right_values = [100 - E, 100 - N , 100 - F, 100 - J]
+    colors = ['#4daf8b', '#ffaf40', '#92c657', '#d86f98']
 
-labels = ['E / I', 'N / S', 'F / T', 'J / P']
+    # 그래프 그리기
+    fig, ax = plt.subplots(figsize=(9, 2))
 
-# 전체 mbti 평균 결과값
-total_left = [total_E, total_N, total_F, total_J]
-total_right = [100 - total_E, 100 - total_N, 100 - total_F, 100 - total_J]
-# 본인 mbti 결과값
-self_left = [self_E, self_N, self_F, self_J]
-self_right = [100 - self_E, 100 - self_N, 100 - self_F, 100 - self_J]
-# 타인 mbti 평균 결과값
-other_left = [other_E, other_N, other_F, other_J]
-other_right = [100 - other_E, 100 - other_N, 100 - other_F, 100 - other_J]
+    # 양쪽에 막대그래프 그리기
+    y = np.arange(len(labels))
+    ax.barh(y, left_values, color=colors, edgecolor='none')
+    ax.barh(y, right_values, left=left_values, color='lightgrey', edgecolor='none')
+
+    # 각 항목의 값을 텍스트로 표시
+    for i in range(len(labels)):
+        # 왼쪽 mbti 비중
+        ax.text(left_values[i] - 5, i, f'{left_values[i]}%', va='center', ha='right', color='black', fontweight='bold')
+        # 오른쪽 mbti 비중
+        ax.text(left_values[i] + 5, i, f'{right_values[i]}%', va='center', ha='left', color='black', fontweight='bold')
+        # 왼쪽 mbti 유형
+        ax.text(5, i, left_labels[i], va='center', ha='center', color='black', fontweight='bold')
+        # 오른쪽 mbti 유형
+        ax.text(95, i, right_labels[i], va='center', ha='center', color='black', fontweight='bold')
+
+    # Y축 설정
+    ax.set_yticks(y)
+    ax.set_yticklabels(labels)
+
+    # 기타 설정
+    ax.invert_yaxis()
+    # ax.set_xlabel('Percentage')
+    ax.set_title(f'{type} : {mbti}')
+
+    # Streamlit에 그래프 표시
+    st.pyplot(fig)
+
+    return mbti
+
+st.markdown(f"{st.session_state['target_name']}의 분석결과")
+getGraph("TOTAL", total_E, total_N, total_F, total_J)
+getGraph("SELF", self_mbti['E'], self_mbti['N'], self_mbti['F'], self_mbti['J'])
+getGraph("OTHER", other_E, other_N, other_F, other_J)
+
+
+# # 전체 mbti 평균 결과값
+# total_left = [total_E, total_N, total_F, total_J]
+# total_right = [100 - total_E, 100 - total_N, 100 - total_F, 100 - total_J]
+# # 본인 mbti 결과값
+# self_left = [self_E, self_N, self_F, self_J]
+# self_right = [100 - self_E, 100 - self_N, 100 - self_F, 100 - self_J]
+# # 타인 mbti 평균 결과값
+# other_left = [other_E, other_N, other_F, other_J]
+# other_right = [100 - other_E, 100 - other_N, 100 - other_F, 100 - other_J]
 # 왼쪽 : E, N, F, J vs 오른쪽 : I, S, T, P
-left_labels= ['E', 'N', 'F', 'J']
-right_labels = ['I', 'S', 'T', 'P']
-colors = ['#4daf8b', '#ffaf40', '#92c657', '#d86f98']
+# left_labels= ['E', 'N', 'F', 'J']
+# right_labels = ['I', 'S', 'T', 'P']
+# colors = ['#4daf8b', '#ffaf40', '#92c657', '#d86f98']
 
-# 그래프 그리기
-total_graph, total_ax = plt.subplots(figsize=(9, 2))
-self_graph, self_ax = plt.subplots(figsize=(9, 2))
-other_graph, other_ax = plt.subplots(figsize=(9, 2))
+# # 그래프 그리기
+# total_graph, total_ax = plt.subplots(figsize=(9, 2))
+# self_graph, self_ax = plt.subplots(figsize=(9, 2))
+# other_graph, other_ax = plt.subplots(figsize=(9, 2))
 
-# 양쪽에 막대그래프 그리기
-y = np.arange(len(labels))
-total_ax.barh(y, total_left, color=colors, edgecolor='none')
-total_ax.barh(y, total_right, left=total_left, color='lightgrey', edgecolor='none')
+# # 양쪽에 막대그래프 그리기
+# y = np.arange(len(labels))
+# total_ax.barh(y, total_left, color=colors, edgecolor='none')
+# total_ax.barh(y, total_right, left=total_left, color='lightgrey', edgecolor='none')
 
-self_ax.barh(y, self_left, color=colors, edgecolor='none')
-self_ax.barh(y, self_right, left=self_left, color='lightgrey', edgecolor='none')
+# self_ax.barh(y, self_left, color=colors, edgecolor='none')
+# self_ax.barh(y, self_right, left=self_left, color='lightgrey', edgecolor='none')
 
-other_ax.barh(y, other_left, color=colors, edgecolor='none')
-other_ax.barh(y, other_right, left=other_left, color='lightgrey', edgecolor='none')
+# other_ax.barh(y, other_left, color=colors, edgecolor='none')
+# other_ax.barh(y, other_right, left=other_left, color='lightgrey', edgecolor='none')
 
-# 각 항목의 값을 텍스트로 표시
-for i in range(4):
-    # 왼쪽 mbti 비중
-    total_ax.text(total_left[i] - 5, i, f'{total_left[i]}%', va='center', ha='right', color='black', fontweight='bold')
-    self_ax.text(self_left[i] - 5, i, f'{self_left[i]}%', va='center', ha='right', color='black', fontweight='bold')
-    other_ax.text(other_left[i] - 5, i, f'{other_left[i]}%', va='center', ha='right', color='black', fontweight='bold')
-    # 오른쪽 mbti 비중
-    total_ax.text(total_left[i] + 5, i, f'{total_right[i]}%', va='center', ha='left', color='black', fontweight='bold')
-    self_ax.text(self_left[i] + 5, i, f'{self_right[i]}%', va='center', ha='left', color='black', fontweight='bold')
-    other_ax.text(other_left[i] + 5, i, f'{other_right[i]}%', va='center', ha='left', color='black', fontweight='bold')
-    # 왼쪽 mbti 유형
-    total_ax.text(5, i, left_labels[i], va='center', ha='center', color='black')
-    self_ax.text(5, i, left_labels[i], va='center', ha='center', color='black')
-    other_ax.text(5, i, left_labels[i], va='center', ha='center', color='black')
-    # 오른쪽 mbti 유형
-    total_ax.text(95, i, right_labels[i], va='center', ha='center', color='black')
-    self_ax.text(95, i, right_labels[i], va='center', ha='center', color='black')
-    other_ax.text(95, i, right_labels[i], va='center', ha='center', color='black')
+# # 각 항목의 값을 텍스트로 표시
+# for i in range(4):
+#     # 왼쪽 mbti 비중
+#     total_ax.text(total_left[i] - 5, i, f'{total_left[i]}%', va='center', ha='right', color='black', fontweight='bold')
+#     self_ax.text(self_left[i] - 5, i, f'{self_left[i]}%', va='center', ha='right', color='black', fontweight='bold')
+#     other_ax.text(other_left[i] - 5, i, f'{other_left[i]}%', va='center', ha='right', color='black', fontweight='bold')
+#     # 오른쪽 mbti 비중
+#     total_ax.text(total_left[i] + 5, i, f'{total_right[i]}%', va='center', ha='left', color='black', fontweight='bold')
+#     self_ax.text(self_left[i] + 5, i, f'{self_right[i]}%', va='center', ha='left', color='black', fontweight='bold')
+#     other_ax.text(other_left[i] + 5, i, f'{other_right[i]}%', va='center', ha='left', color='black', fontweight='bold')
+#     # 왼쪽 mbti 유형
+#     total_ax.text(5, i, left_labels[i], va='center', ha='center', color='black')
+#     self_ax.text(5, i, left_labels[i], va='center', ha='center', color='black')
+#     other_ax.text(5, i, left_labels[i], va='center', ha='center', color='black')
+#     # 오른쪽 mbti 유형
+#     total_ax.text(95, i, right_labels[i], va='center', ha='center', color='black')
+#     self_ax.text(95, i, right_labels[i], va='center', ha='center', color='black')
+#     other_ax.text(95, i, right_labels[i], va='center', ha='center', color='black')
 
-# Y축 설정
-total_ax.set_yticks(y)
-total_ax.set_yticklabels(labels)
-self_ax.set_yticks(y)
-self_ax.set_yticklabels(labels)
-other_ax.set_yticks(y)
-other_ax.set_yticklabels(labels)
+# # Y축 설정
+# total_ax.set_yticks(y)
+# total_ax.set_yticklabels(labels)
+# self_ax.set_yticks(y)
+# self_ax.set_yticklabels(labels)
+# other_ax.set_yticks(y)
+# other_ax.set_yticklabels(labels)
 
-# 기타 설정
-total_ax.invert_yaxis()
-total_ax.set_xlabel('Percentage')
-total_ax.set_title(f'TOTAL : {total_mbti}')
+# # 기타 설정
+# total_ax.invert_yaxis()
+# total_ax.set_xlabel('Percentage')
+# total_ax.set_title(f'TOTAL : {total_mbti}')
 
-self_ax.invert_yaxis()
-self_ax.set_xlabel('Percentage')
-self_ax.set_title(f'SELF : {self_mbti["mbti"]}')
+# self_ax.invert_yaxis()
+# self_ax.set_xlabel('Percentage')
+# self_ax.set_title(f'SELF : {self_mbti["mbti"]}')
 
-other_ax.invert_yaxis()
-other_ax.set_xlabel('Percentage')
-other_ax.set_title(f'OTHER : {other_mbti}')
+# other_ax.invert_yaxis()
+# # other_ax.set_xlabel('Percentage')
+# other_ax.set_title(f'OTHER : {other_mbti}')
 
 
-# Streamlit에 그래프 표시
-st.pyplot(total_graph)
-st.pyplot(self_graph)
-st.pyplot(other_graph)
+# # Streamlit에 그래프 표시
+# st.pyplot(total_graph)
+# st.pyplot(self_graph)
+# st.pyplot(other_graph)
 
 
 if st.button("다시 분석 하러가기", type="primary"):
