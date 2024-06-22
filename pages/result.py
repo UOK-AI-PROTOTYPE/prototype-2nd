@@ -87,6 +87,7 @@ def getGraph(type, E, N, F, J):
     right_labels = ['I', 'S', 'T', 'P']
     left_values = [E, N , F, J]
     right_values = [100 - E, 100 - N , 100 - F, 100 - J]
+    # 그래프 색상
     colors = ['#4daf8b', '#ffaf40', '#92c657', '#d86f98']
 
     # 그래프 그리기
@@ -122,7 +123,7 @@ def getGraph(type, E, N, F, J):
 
     return mbti
 
-st.markdown(f"{st.session_state['target_name']}의 분석결과")
+st.markdown(f"{st.session_state['target_name']}님의 분석결과")
 getGraph("TOTAL", total_E, total_N, total_F, total_J)
 getGraph("SELF", self_mbti['E'], self_mbti['N'], self_mbti['F'], self_mbti['J'])
 getGraph("OTHER", other_E, other_N, other_F, other_J)
