@@ -74,7 +74,9 @@ other_F = (sum_F - self_F) // (st.session_state['num_participant'] - 1)
 other_J = (sum_J - self_J) // (st.session_state['num_participant'] - 1)
 
 # 그래프 색상
-given_color = ['#a8cbff', '#9ff0ce', '#ff9f9f', '#cdafff'] 
+given_color = ['#a8cbff', '#9ff0ce', '#ff9f9f', '#cdafff']
+sub_color = '#efefef'
+bar_thickness = 0.7 # 그래프 두께
 
 def getGraph(type, E, N, F, J):
     mbti = ""
@@ -83,53 +85,53 @@ def getGraph(type, E, N, F, J):
     if E >= 50:
         mbti += "E"
         left_colors.append(given_color[0])
-        right_colors.append('#efefef')
+        right_colors.append(sub_color)
     else:
         mbti += "I"
-        left_colors.append('#efefef')
+        left_colors.append(sub_color)
         right_colors.append(given_color[0])
     if N >= 50:
         mbti += "N"
         left_colors.append(given_color[1])
-        right_colors.append('#efefef')
+        right_colors.append(sub_color)
     else:
         mbti += "S"
-        left_colors.append('#efefef')
+        left_colors.append(sub_color)
         right_colors.append(given_color[1])
     if F >= 50:
         mbti += "F"
         left_colors.append(given_color[2])
-        right_colors.append('#efefef')
+        right_colors.append(sub_color)
     else:
         mbti += "T"
-        left_colors.append('#efefef')
+        left_colors.append(sub_color)
         right_colors.append(given_color[2])
     if J >= 50:
         mbti += "J"
         left_colors.append(given_color[3])
-        right_colors.append('#efefef')
+        right_colors.append(sub_color)
     else:
         mbti += "P"
-        left_colors.append('#efefef')
+        left_colors.append(sub_color)
         right_colors.append(given_color[3])
 
     labels = ['E / I', 'N / S', 'F / T', 'J / P']
     left_labels= ['E', 'N', 'F', 'J']
     right_labels = ['I', 'S', 'T', 'P']
-    left_values = [E, N , F, J]
+    left_values = [E, N, F, J]
     right_values = [100 - E, 100 - N , 100 - F, 100 - J]
     letter_space = 5
-    start_space = 7
+    start_space = -3
 
-    # TOTAL 따로, SELF, OTHER 같이
-    if type == 'TOTAL':
+    # Total 따로, Self, Other 같이
+    if type == 'Total':
         fig, ax = plt.subplots(figsize=(9, 2))
         text_size = 10
         title_size = 'large'
         ytick_size = 10
         letter_space /= 2
         start_space /= 2
-    else: # SELF, OTHER 
+    else: # Self, Other
         fig, ax = plt.subplots(figsize=(9, 4))
         text_size = 20
         title_size = 25
@@ -137,8 +139,8 @@ def getGraph(type, E, N, F, J):
 
     # 양쪽에 막대그래프 그리기
     y = np.arange(len(labels))
-    ax.barh(y, left_values, color=left_colors, edgecolor='none')
-    ax.barh(y, right_values, left=left_values, color=right_colors, edgecolor='none')
+    ax.barh(y, left_values, height=bar_thickness, color=left_colors, edgecolor='none')
+    ax.barh(y, right_values, height=bar_thickness, left=left_values, color=right_colors, edgecolor='none')
 
     # 각 항목의 값을 텍스트로 표시
     for i in range(len(labels)):
@@ -179,15 +181,19 @@ def getGraph(type, E, N, F, J):
     return mbti
 
 st.title(f"{st.session_state['target_name']}님의 분석결과")
-getGraph("TOTAL", total_E, total_N, total_F, total_J)
+st.markdown("")
+st.markdown("")
+
+getGraph("Total", total_E, total_N, total_F, total_J)
+st.markdown("")
 
 col1, col2 = st.columns(2)
 
 with col1:
-    getGraph("SELF", self_mbti['E'], self_mbti['N'], self_mbti['F'], self_mbti['J'])
+    getGraph("Self", self_mbti['E'], self_mbti['N'], self_mbti['F'], self_mbti['J'])
 
 with col2:
-    getGraph("OTHER", other_E, other_N, other_F, other_J)
+    getGraph("Other", other_E, other_N, other_F, other_J)
 
 
 # 성향분석 최종 결과 

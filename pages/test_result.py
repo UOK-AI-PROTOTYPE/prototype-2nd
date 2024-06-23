@@ -7,7 +7,6 @@ import matplotlib.patches as patches
 st.set_page_config(
     initial_sidebar_state="collapsed",
     page_title="UOK AI PROJECT",
-
     layout="centered",
 )
 
@@ -25,7 +24,6 @@ bar_thickness = 0.7 # 그래프 두께
 # 그래프 그리기
 fig1, ax = plt.subplots(figsize=(9, 2))
 fig2, bx = plt.subplots(figsize=(9, 4))
-
 
 
 # 배경색 설정
