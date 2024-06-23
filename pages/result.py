@@ -2,6 +2,8 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
 import re
+import time
+from utils.result import generate_result
 
 def find_mbti(result):
     mbti_pattern = re.compile(r'MBTI\s*:\s*([A-Z]{4})')
@@ -15,6 +17,11 @@ def find_mbti(result):
 
 if "mbti" not in st.session_state:
     st.session_state.mbti = []
+
+with st.spinner('결과를 분석 중입니다. 잠시만 기다려주세요 🧐'):
+    # 최종 종합 결과 생성
+    final_result = generate_result()
+    time.sleep(8)
 
 sum_E = 0
 sum_N = 0
@@ -150,6 +157,9 @@ st.title(f"{st.session_state['target_name']}님의 분석결과")
 getGraph("TOTAL", total_E, total_N, total_F, total_J)
 getGraph("SELF", self_mbti['E'], self_mbti['N'], self_mbti['F'], self_mbti['J'])
 getGraph("OTHER", other_E, other_N, other_F, other_J)
+
+
+st.markdown(final_result)
 
 # CSS for alignment
 st.markdown("""

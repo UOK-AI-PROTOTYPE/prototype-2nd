@@ -6,16 +6,18 @@ import toml
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 prompts = toml.load('static/toml/prompts.toml')
 
-def generate_result(target_name, result):
-    messages=[]
-    messages.append({
-        "role": "system", "content": prompts["result_prompt"]
-    })
-    # result 값들 넣어주기, 아래 코드 참고
-    # messages=[ 
-    #     {"role": m["role"], "content": m["content"]}
-    #     for m in st.session_state.messages
-    # ].copy()
+def generate_result():
+    # target_name = st.session_state.user_info[1]
+    target_name = st.session_state['target_name']
+    # system 메세지
+    messages = [{
+        "role": "system", "content": f"""target_name : {target_name}, prompt: {prompts["result_prompt"]}"""
+    }]
+
+    # 사용자 메시지를 추가
+    messages.extend([{
+        "role": "user", "content": f"name: {data['name']}, relation: {data['relation']}, result: {data['result']}"
+    } for data in st.session_state.participant])
 
     response = client.chat.completions.create(
         model=st.session_state["openai_model"],
