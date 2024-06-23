@@ -72,9 +72,8 @@ def user_change(target_name):
         placeholder="관계를 설정해주세요"
     )
 
-    st.session_state["participant"].append({participant_name: relation})
-
-    if st.button("분석 시작하기"):
+    if st.button("분석 시작하기", type="primary"):
+        st.session_state.participant.append({"name": participant_name, "relation": relation, "result": None})
         stream = generate_question(target_name, participant_name, relation)
         st.session_state.messages.append({"role": "assistant", "content": stream})
         st.rerun()
