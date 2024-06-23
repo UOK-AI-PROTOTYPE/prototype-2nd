@@ -71,7 +71,7 @@ other_F = (sum_F - self_F) // (st.session_state['num_participant'] - 1)
 other_J = (sum_J - self_J) // (st.session_state['num_participant'] - 1)
 
 # 그래프 색상
-given_color = ['#fff09e', '#9ff0ce', '#ff9f9f', '#cdafff']
+given_color = ['#a8cbff', '#9ff0ce', '#ff9f9f', '#cdafff'] 
 
 def getGraph(type, E, N, F, J):
     mbti = ""
@@ -80,34 +80,34 @@ def getGraph(type, E, N, F, J):
     if E >= 50:
         mbti += "E"
         left_colors.append(given_color[0])
-        right_colors.append('lightgrey')
+        right_colors.append('#efefef')
     else:
         mbti += "I"
-        left_colors.append('lightgrey')
+        left_colors.append('#efefef')
         right_colors.append(given_color[0])
     if N >= 50:
         mbti += "N"
         left_colors.append(given_color[1])
-        right_colors.append('lightgrey')
+        right_colors.append('#efefef')
     else:
         mbti += "S"
-        left_colors.append('lightgrey')
+        left_colors.append('#efefef')
         right_colors.append(given_color[1])
     if F >= 50:
         mbti += "F"
         left_colors.append(given_color[2])
-        right_colors.append('lightgrey')
+        right_colors.append('#efefef')
     else:
         mbti += "T"
-        left_colors.append('lightgrey')
+        left_colors.append('#efefef')
         right_colors.append(given_color[2])
     if J >= 50:
         mbti += "J"
         left_colors.append(given_color[3])
-        right_colors.append('lightgrey')
+        right_colors.append('#efefef')
     else:
         mbti += "P"
-        left_colors.append('lightgrey')
+        left_colors.append('#efefef')
         right_colors.append(given_color[3])
 
     labels = ['E / I', 'N / S', 'F / T', 'J / P']
@@ -116,8 +116,19 @@ def getGraph(type, E, N, F, J):
     left_values = [E, N , F, J]
     right_values = [100 - E, 100 - N , 100 - F, 100 - J]
 
-    # 그래프 그리기
-    fig, ax = plt.subplots(figsize=(9, 2))
+    # TOTAL 따로, SELF, OTHER 같이
+    if type == 'TOTAL':
+        fig, ax = plt.subplots(figsize=(9, 2))
+        text_size = 10
+        title_size = 'large'
+        ytick_size = 10
+        letter_space = 2.5
+    else: # SELF, OTHER 
+        fig, ax = plt.subplots(figsize=(9, 4))
+        text_size = 20
+        title_size = 25
+        ytick_size = 20
+        letter_space = 5
 
     # 양쪽에 막대그래프 그리기
     y = np.arange(len(labels))
@@ -127,25 +138,34 @@ def getGraph(type, E, N, F, J):
     # 각 항목의 값을 텍스트로 표시
     for i in range(len(labels)):
         # 왼쪽 mbti 비중
-        ax.text(left_values[i] - 5, i, f'{left_values[i]}%', va='center', ha='right', color='black', fontweight='bold')
+        ax.text(left_values[i] - letter_space, i, f'{left_values[i]}', va='center', ha='right', color='black', fontsize=text_size)
         # 오른쪽 mbti 비중
-        ax.text(left_values[i] + 5, i, f'{right_values[i]}%', va='center', ha='left', color='black', fontweight='bold')
+        ax.text(left_values[i] + letter_space, i, f'{right_values[i]}', va='center', ha='left', color='black', fontsize=text_size)
         # 왼쪽 mbti 유형
-        ax.text(5, i, left_labels[i], va='center', ha='center', color='black', fontweight='bold')
+        ax.text(5, i, left_labels[i], va='center', ha='center', color='black', fontsize=text_size)
         # 오른쪽 mbti 유형
-        ax.text(95, i, right_labels[i], va='center', ha='center', color='black', fontweight='bold')
+        ax.text(95, i, right_labels[i], va='center', ha='center', color='black', fontsize=text_size)
 
     # Y축 설정
     ax.set_yticks(y)
-    ax.set_yticklabels(labels)
+    ax.set_yticklabels(labels, fontsize=ytick_size)
 
     # 기타 설정
     ax.invert_yaxis()
     # ax.set_xlabel('Percentage')
-    ax.set_title(f'{type} : {mbti}')
+    ax.set_title(f'{type} : {mbti}', fontsize=title_size)
+
+    # x축, y축 눈금을 숨김
+    ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
+
+    # 테두리 선을 숨김
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
 
     # 레이아웃을 조정하여 공백 제거
-    plt.tight_layout() # 그래프 크기 다름
     ax.set_xlim(0, 100) # 오른쪽 여백 제거
 
     # Streamlit에 그래프 표시
@@ -155,8 +175,19 @@ def getGraph(type, E, N, F, J):
 
 st.title(f"{st.session_state['target_name']}님의 분석결과")
 getGraph("TOTAL", total_E, total_N, total_F, total_J)
-getGraph("SELF", self_mbti['E'], self_mbti['N'], self_mbti['F'], self_mbti['J'])
-getGraph("OTHER", other_E, other_N, other_F, other_J)
+
+col1, col2 = st.columns(2)
+
+with col1:
+    getGraph("SELF", self_mbti['E'], self_mbti['N'], self_mbti['F'], self_mbti['J'])
+
+with col2:
+    getGraph("OTHER", other_E, other_N, other_F, other_J)
+
+# getGraph("SELF", self_mbti['E'], self_mbti['N'], self_mbti['F'], self_mbti['J'])
+# getGraph("OTHER", other_E, other_N, other_F, other_J)
+
+### 성향 분석 결과 ###
 
 
 st.markdown(final_result)
@@ -186,7 +217,10 @@ if st.button("다시 분석 하러가기", type="primary"):
 
 
 
-# ###################################################
+###################################################
+###################################################
+
+
 # ### 테스트 버전 ###
 # import streamlit as st
 # import matplotlib.pyplot as plt
@@ -198,40 +232,83 @@ if st.button("다시 분석 하러가기", type="primary"):
 # right_values = [32, 44, 49, 37]
 # left_labels = ['A', 'B', 'C', 'D']
 # right_labels = ['F', 'G', 'H', 'I']
-# # colors = ['#4daf8b', '#ffaf40', '#92c657', '#d86f98']
-# colors = ['#fff09e', '#9ff0ce', '#ff9f9f', '#cdafff']
+# colors = ['#a8cbff', '#9ff0ce', '#ff9f9f', '#cdafff']
 
 # # 그래프 그리기
-# fig, ax = plt.subplots(figsize=(9, 2))
+# fig1, ax = plt.subplots(figsize=(9, 2))
+# fig2, bx = plt.subplots(figsize=(9, 4))
 
 # # 양쪽에 막대그래프 그리기
 # y = np.arange(len(labels))
 # ax.barh(y, left_values, color=colors, edgecolor='none')
-# ax.barh(y, right_values, left=left_values, color='lightgrey', edgecolor='none')
+# ax.barh(y, right_values, left=left_values, color='#efefef', edgecolor='none')
+
+# bx.barh(y, left_values, color=colors, edgecolor='none')
+# bx.barh(y, right_values, left=left_values, color='#efefef', edgecolor='none')
 
 # # 각 항목의 값을 텍스트로 표시
 # for i in range(len(labels)):
-#     ax.text(left_values[i] - 5, i, f'{left_values[i]}%', va='center', ha='right', color='black', fontweight='bold')
-#     ax.text(left_values[i] + 5, i, f'{right_values[i]}%', va='center', ha='left', color='black', fontweight='bold')
-#     ax.text(5, i, left_labels[i], va='center', ha='center', color='black', fontweight='bold')
-#     ax.text(95, i, right_labels[i], va='center', ha='center', color='black', fontweight='bold')
+#     ax.text(left_values[i] - 2.5, i, f'{left_values[i]}', va='center', ha='right', color='black')
+#     ax.text(left_values[i] + 2.5, i, f'{right_values[i]}', va='center', ha='left', color='black')
+#     ax.text(5, i, left_labels[i], va='center', ha='center', color='black')
+#     ax.text(95, i, right_labels[i], va='center', ha='center', color='black')
+
+# for i in range(len(labels)):
+#     bx.text(left_values[i] - 5, i, f'{left_values[i]}', va='center', ha='right', color='black', fontsize=20)
+#     bx.text(left_values[i] + 5, i, f'{right_values[i]}', va='center', ha='left', color='black', fontsize=20)
+#     bx.text(5, i, left_labels[i], va='center', ha='center', color='black', fontsize=20)
+#     bx.text(95, i, right_labels[i], va='center', ha='center', color='black', fontsize=20)
 
 # # Y축 설정
 # ax.set_yticks(y)
 # ax.set_yticklabels(labels)
 
+# bx.set_yticks(y)
+# bx.set_yticklabels(labels, fontsize=20)
+
 # # 기타 설정
 # ax.invert_yaxis()
 # ax.set_title('MBTI')
+
+# bx.invert_yaxis()
+# bx.set_title('MBTI', fontsize=25)
+
+# # x축, y축 눈금을 숨김
+# ax.get_xaxis().set_visible(False)
+# ax.get_yaxis().set_visible(False)
+
+# bx.get_xaxis().set_visible(False)
+# bx.get_yaxis().set_visible(False)
 
 # # 레이아웃을 조정하여 공백 제거
 # # plt.tight_layout() # 그래프 크기 다름
 # ax.set_xlim(0, 100) # 오른쪽 여백 제거
 
+# bx.set_xlim(0, 100) # 오른쪽 여백 제거
+
+# # 테두리 선을 숨김
+# ax.spines['top'].set_visible(False)
+# ax.spines['right'].set_visible(False)
+# ax.spines['left'].set_visible(False)
+# ax.spines['bottom'].set_visible(False)
+
+# bx.spines['top'].set_visible(False)
+# bx.spines['right'].set_visible(False)
+# bx.spines['left'].set_visible(False)
+# bx.spines['bottom'].set_visible(False)
+
 # st.title('준우님의 MBTI 분석 결과')
 
 # # Streamlit에 그래프 표시
-# st.pyplot(fig)
+# st.pyplot(fig1)
+
+# col1, col2 = st.columns(2)
+
+# with col1:
+#     st.pyplot(fig2)
+
+# with col2:
+#     st.pyplot(fig2)
 
 # # CSS for alignment
 # st.markdown("""
@@ -251,27 +328,3 @@ if st.button("다시 분석 하러가기", type="primary"):
 #     del st.session_state.mbti
 
 #     st.switch_page("pages/chat.py")
-
-
-
-
-
-
-# ###################################################
-# ### st.bar_chart 사용 ###
-# import streamlit as st
-# import pandas as pd
-# import numpy as np
-# from utils.chat_background import chat_background
-
-# chart_data = pd.DataFrame(
-#    {
-#        "col1": ['E / I', 'N / S', 'F / T', 'J / P'],
-#        "col2": [60, 70, 80, 30],
-#        "col3": ['#fff09e', '#9ff0ce', '#ff9f9f', '#cdafff']
-       
-#    }
-# )
-
-# st.bar_chart(chart_data, x="col1", y="col2", color = "col3", horizontal=True)
-# chat_background()
