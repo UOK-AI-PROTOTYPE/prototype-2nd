@@ -3,3 +3,4 @@ streamlit==1.36.0
 streamlit-chat
 streamlit-navigation-bar
 bcrypt
+matplotlib
