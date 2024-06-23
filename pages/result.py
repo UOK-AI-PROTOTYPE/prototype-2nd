@@ -73,34 +73,34 @@ def getGraph(type, E, N, F, J):
     if E >= 50:
         mbti += "E"
         left_colors.append(given_color[0])
-        right_colors.append('lightgrey')
+        right_colors.append('#efefef')
     else:
         mbti += "I"
-        left_colors.append('lightgrey')
+        left_colors.append('#efefef')
         right_colors.append(given_color[0])
     if N >= 50:
         mbti += "N"
         left_colors.append(given_color[1])
-        right_colors.append('lightgrey')
+        right_colors.append('#efefef')
     else:
         mbti += "S"
-        left_colors.append('lightgrey')
+        left_colors.append('#efefef')
         right_colors.append(given_color[1])
     if F >= 50:
         mbti += "F"
         left_colors.append(given_color[2])
-        right_colors.append('lightgrey')
+        right_colors.append('#efefef')
     else:
         mbti += "T"
-        left_colors.append('lightgrey')
+        left_colors.append('#efefef')
         right_colors.append(given_color[2])
     if J >= 50:
         mbti += "J"
         left_colors.append(given_color[3])
-        right_colors.append('lightgrey')
+        right_colors.append('#efefef')
     else:
         mbti += "P"
-        left_colors.append('lightgrey')
+        left_colors.append('#efefef')
         right_colors.append(given_color[3])
 
     labels = ['E / I', 'N / S', 'F / T', 'J / P']
@@ -129,13 +129,13 @@ def getGraph(type, E, N, F, J):
     # 각 항목의 값을 텍스트로 표시
     for i in range(len(labels)):
         # 왼쪽 mbti 비중
-        ax.text(left_values[i] - 5, i, f'{left_values[i]}%', va='center', ha='right', color='black', fontweight='bold', fontsize=text_size)
+        ax.text(left_values[i] - 5, i, f'{left_values[i]}', va='center', ha='right', color='black', fontsize=text_size)
         # 오른쪽 mbti 비중
-        ax.text(left_values[i] + 5, i, f'{right_values[i]}%', va='center', ha='left', color='black', fontweight='bold', fontsize=text_size)
+        ax.text(left_values[i] + 5, i, f'{right_values[i]}', va='center', ha='left', color='black', fontsize=text_size)
         # 왼쪽 mbti 유형
-        ax.text(5, i, left_labels[i], va='center', ha='center', color='black', fontweight='bold', fontsize=text_size)
+        ax.text(5, i, left_labels[i], va='center', ha='center', color='black', fontsize=text_size)
         # 오른쪽 mbti 유형
-        ax.text(95, i, right_labels[i], va='center', ha='center', color='black', fontweight='bold', fontsize=text_size)
+        ax.text(95, i, right_labels[i], va='center', ha='center', color='black', fontsize=text_size)
 
     # Y축 설정
     ax.set_yticks(y)
@@ -146,8 +146,15 @@ def getGraph(type, E, N, F, J):
     # ax.set_xlabel('Percentage')
     ax.set_title(f'{type} : {mbti}', fontsize=title_size)
 
-    # x축 눈금을 숨김
+    # x축, y축 눈금을 숨김
     ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
+
+    # 테두리 선을 숨김
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
 
     # 레이아웃을 조정하여 공백 제거
     ax.set_xlim(0, 100) # 오른쪽 여백 제거
@@ -219,23 +226,23 @@ if st.button("다시 분석 하러가기", type="primary"):
 # # 양쪽에 막대그래프 그리기
 # y = np.arange(len(labels))
 # ax.barh(y, left_values, color=colors, edgecolor='none')
-# ax.barh(y, right_values, left=left_values, color='lightgrey', edgecolor='none')
+# ax.barh(y, right_values, left=left_values, color='#efefef', edgecolor='none')
 
 # bx.barh(y, left_values, color=colors, edgecolor='none')
-# bx.barh(y, right_values, left=left_values, color='lightgrey', edgecolor='none')
+# bx.barh(y, right_values, left=left_values, color='#efefef', edgecolor='none')
 
 # # 각 항목의 값을 텍스트로 표시
 # for i in range(len(labels)):
-#     ax.text(left_values[i] - 5, i, f'{left_values[i]}%', va='center', ha='right', color='black', fontweight='bold')
-#     ax.text(left_values[i] + 5, i, f'{right_values[i]}%', va='center', ha='left', color='black', fontweight='bold')
-#     ax.text(5, i, left_labels[i], va='center', ha='center', color='black', fontweight='bold')
-#     ax.text(95, i, right_labels[i], va='center', ha='center', color='black', fontweight='bold')
+#     ax.text(left_values[i] - 5, i, f'{left_values[i]}%', va='center', ha='right', color='black')
+#     ax.text(left_values[i] + 5, i, f'{right_values[i]}%', va='center', ha='left', color='black')
+#     ax.text(5, i, left_labels[i], va='center', ha='center', color='black')
+#     ax.text(95, i, right_labels[i], va='center', ha='center', color='black')
 
 # for i in range(len(labels)):
-#     bx.text(left_values[i] - 5, i, f'{left_values[i]}%', va='center', ha='right', color='black', fontweight='bold', fontsize=20)
-#     bx.text(left_values[i] + 5, i, f'{right_values[i]}%', va='center', ha='left', color='black', fontweight='bold', fontsize=20)
-#     bx.text(5, i, left_labels[i], va='center', ha='center', color='black', fontweight='bold', fontsize=20)
-#     bx.text(95, i, right_labels[i], va='center', ha='center', color='black', fontweight='bold', fontsize=20)
+#     bx.text(left_values[i] - 5, i, f'{left_values[i]}', va='center', ha='right', color='black', fontsize=20)
+#     bx.text(left_values[i] + 5, i, f'{right_values[i]}', va='center', ha='left', color='black', fontsize=20)
+#     bx.text(5, i, left_labels[i], va='center', ha='center', color='black', fontsize=20)
+#     bx.text(95, i, right_labels[i], va='center', ha='center', color='black', fontsize=20)
 
 # # Y축 설정
 # ax.set_yticks(y)
@@ -251,16 +258,29 @@ if st.button("다시 분석 하러가기", type="primary"):
 # bx.invert_yaxis()
 # bx.set_title('MBTI', fontsize=25)
 
-# # x축 눈금을 숨김
+# # x축, y축 눈금을 숨김
 # ax.get_xaxis().set_visible(False)
+# ax.get_yaxis().set_visible(False)
 
 # bx.get_xaxis().set_visible(False)
+# bx.get_yaxis().set_visible(False)
 
 # # 레이아웃을 조정하여 공백 제거
 # # plt.tight_layout() # 그래프 크기 다름
 # ax.set_xlim(0, 100) # 오른쪽 여백 제거
 
 # bx.set_xlim(0, 100) # 오른쪽 여백 제거
+
+# # 테두리 선을 숨김
+# ax.spines['top'].set_visible(False)
+# ax.spines['right'].set_visible(False)
+# ax.spines['left'].set_visible(False)
+# ax.spines['bottom'].set_visible(False)
+
+# bx.spines['top'].set_visible(False)
+# bx.spines['right'].set_visible(False)
+# bx.spines['left'].set_visible(False)
+# bx.spines['bottom'].set_visible(False)
 
 # st.title('준우님의 MBTI 분석 결과')
 
