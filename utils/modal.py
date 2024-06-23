@@ -21,7 +21,7 @@ def generate_question(target_name, participant_name, relation):
         "content": 
             f"""target_name: {target_name}, participant_name :{participant_name}, relation: {relation},
             이제 분석대상인 {target_name}에 대해서 {relation} 관계인 {participant_name}가 대화에 참여할거야.
-            안녕하세요 {participant_name}님, {target_name}과 {relation} 관계이시군요! 라는 문장을 답변에 필수로 포함하고 분석을 진행해줘."""
+            안녕하세요 {participant_name}님, {target_name}과 {relation} 관계이시군요!☺️ 라는 문장을 답변에 필수로 포함하고 분석을 진행해줘."""
             })
 
     response = client.chat.completions.create(
@@ -36,7 +36,7 @@ prompts = toml.load('static/toml/prompts.toml')
 
 
 # 챗봇 입장시 :  로그인 모달과 연계되는 모달 - 수정 버전
-@st.experimental_dialog("분석에 참여할 인원을 알려주세요 !")
+@st.experimental_dialog("분석에 참여할 인원을 알려주세요 ☺️ ")
 def enter_modal():
     target_id, target_name = st.session_state.user_info[0], st.session_state.user_info[1]
     st.subheader(f"안녕하세요, {target_name}님.")
