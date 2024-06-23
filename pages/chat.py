@@ -34,7 +34,7 @@ if "user_info" not in st.session_state:
     modal.signIn_modal()
 else:
     if "participant" not in st.session_state:
-        st.session_state["participant"] = []
+        st.session_state.participant = []
         modal.enter_modal()
 
 ######## GPT API를 사용하여 질문을 생성하는 함수
