@@ -5,6 +5,8 @@ from utils.chat_background import chat_background
 from utils.db import add_user, get_user, add_userResult, get_user_info, get_user_result
 from utils import modal
 import toml
+import time
+from utils.result import generate_result
 
 setting = toml.load('static/toml/setting.toml')
 prompts = toml.load('static/toml/prompts.toml')
@@ -113,7 +115,11 @@ if prompt := st.chat_input("답변을 작성해주세요 !"):
             st.session_state.participant[-1]["result"] = response
 
         if st.session_state['remaining_users'] == 0:    # 마지막 유저 (남아있는 인원 : 0)
+            # TODO : 완성본의 경우 최종결과 여기서 받아오도록 수정
+            # st.session_state.final_result = generate_result()
+            time.sleep(2)
             modal.end_modal(response)
         else:
             st.session_state['remaining_users'] -= 1
+            time.sleep(2)
             modal.user_change(target_name)

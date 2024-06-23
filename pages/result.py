@@ -2,8 +2,13 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
 import re
-import time
 from utils.result import generate_result
+
+st.set_page_config(
+    initial_sidebar_state="collapsed",
+    page_title="UOK AI PROJECT",
+    layout="centered",
+)
 
 def find_mbti(result):
     mbti_pattern = re.compile(r'MBTI\s*:\s*([A-Z]{4})')
@@ -18,10 +23,8 @@ def find_mbti(result):
 if "mbti" not in st.session_state:
     st.session_state.mbti = []
 
-with st.spinner('결과를 분석 중입니다. 잠시만 기다려주세요 🧐'):
-    # 최종 종합 결과 생성
-    final_result = generate_result()
-    time.sleep(8)
+with st.spinner("결과를 분석 중입니다. 잠시만 기다려주세요 🧐 "):
+    final_result=generate_result()
 
 sum_E = 0
 sum_N = 0
@@ -187,8 +190,12 @@ with col2:
     getGraph("OTHER", other_E, other_N, other_F, other_J)
 
 
-### 성향 분석 결과 ###
+# 성향분석 최종 결과 
+st.markdown("")
+st.markdown("")
 st.markdown(final_result)
+st.markdown("")
+st.markdown("")
 
 # CSS for alignment
 st.markdown("""
