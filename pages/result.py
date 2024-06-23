@@ -115,11 +115,13 @@ def getGraph(type, E, N, F, J):
         text_size = 10
         title_size = 'large'
         ytick_size = 10
+        letter_space = 2.5
     else: # SELF, OTHER 
         fig, ax = plt.subplots(figsize=(9, 4))
         text_size = 20
         title_size = 25
         ytick_size = 20
+        letter_space = 5
 
     # 양쪽에 막대그래프 그리기
     y = np.arange(len(labels))
@@ -129,9 +131,9 @@ def getGraph(type, E, N, F, J):
     # 각 항목의 값을 텍스트로 표시
     for i in range(len(labels)):
         # 왼쪽 mbti 비중
-        ax.text(left_values[i] - 5, i, f'{left_values[i]}', va='center', ha='right', color='black', fontsize=text_size)
+        ax.text(left_values[i] - letter_space, i, f'{left_values[i]}', va='center', ha='right', color='black', fontsize=text_size)
         # 오른쪽 mbti 비중
-        ax.text(left_values[i] + 5, i, f'{right_values[i]}', va='center', ha='left', color='black', fontsize=text_size)
+        ax.text(left_values[i] + letter_space, i, f'{right_values[i]}', va='center', ha='left', color='black', fontsize=text_size)
         # 왼쪽 mbti 유형
         ax.text(5, i, left_labels[i], va='center', ha='center', color='black', fontsize=text_size)
         # 오른쪽 mbti 유형
@@ -205,7 +207,10 @@ if st.button("다시 분석 하러가기", type="primary"):
 
 
 
-# ###################################################
+###################################################
+###################################################
+
+
 # ### 테스트 버전 ###
 # import streamlit as st
 # import matplotlib.pyplot as plt
@@ -233,8 +238,8 @@ if st.button("다시 분석 하러가기", type="primary"):
 
 # # 각 항목의 값을 텍스트로 표시
 # for i in range(len(labels)):
-#     ax.text(left_values[i] - 5, i, f'{left_values[i]}%', va='center', ha='right', color='black')
-#     ax.text(left_values[i] + 5, i, f'{right_values[i]}%', va='center', ha='left', color='black')
+#     ax.text(left_values[i] - 2.5, i, f'{left_values[i]}', va='center', ha='right', color='black')
+#     ax.text(left_values[i] + 2.5, i, f'{right_values[i]}', va='center', ha='left', color='black')
 #     ax.text(5, i, left_labels[i], va='center', ha='center', color='black')
 #     ax.text(95, i, right_labels[i], va='center', ha='center', color='black')
 
